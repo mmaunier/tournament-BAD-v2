@@ -1029,15 +1029,29 @@
    PAGE AFFICHAGE (Vidéoprojecteur)
    ======================================== */
 
+/* Neutraliser les contraintes de hauteur des parents pour cette page */
+body:has(.page-affichage) {
+    min-height: auto;
+    height: calc(var(--real-vh, 1vh) * 100);
+    overflow: hidden;
+}
+
+body:has(.page-affichage) #app {
+    min-height: auto;
+    height: 100%;
+}
+
 .page-affichage {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    height: 100vh;
+    /* Hauteur réelle calculée par JavaScript */
+    height: calc(var(--real-vh, 1vh) * 100);
+    max-height: calc(var(--real-vh, 1vh) * 100);
     background: linear-gradient(135deg, var(--color-gray-900) 0%, var(--color-gray-800) 100%);
     padding: var(--spacing-4);
     gap: var(--spacing-4);
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 /* Zone des terrains */

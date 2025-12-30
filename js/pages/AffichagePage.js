@@ -15,6 +15,19 @@ class AffichagePage {
                 this.render(document.querySelector('.page-affichage'));
             }
         });
+        
+        // Calculer la hauteur réelle de la fenêtre (sans barre de titre/menu navigateur)
+        this.updateRealViewportHeight();
+        window.addEventListener('resize', () => this.updateRealViewportHeight());
+    }
+    
+    /**
+     * Met à jour la variable CSS --real-vh avec la vraie hauteur disponible
+     */
+    updateRealViewportHeight() {
+        // window.innerHeight donne la hauteur réelle disponible dans la fenêtre
+        const realVh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--real-vh', `${realVh}px`);
     }
 
     /**
