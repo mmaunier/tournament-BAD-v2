@@ -1,0 +1,277 @@
+/**
+ * Styles spécifiques à la page Affichage (Vidéoprojecteur)
+ */
+
+/* ========================================
+   PAGE AFFICHAGE (Vidéoprojecteur)
+   ======================================== */
+
+/* Neutraliser les contraintes de hauteur des parents pour cette page */
+body:has(.page-affichage) {
+    min-height: auto;
+    height: calc(var(--real-vh, 1vh) * 100);
+    overflow: hidden;
+}
+
+body:has(.page-affichage) #app {
+    min-height: auto;
+    height: 100%;
+}
+
+.page-affichage {
+    display: flex;
+    flex-direction: column;
+    /* Hauteur réelle calculée par JavaScript */
+    height: calc(var(--real-vh, 1vh) * 100);
+    max-height: calc(var(--real-vh, 1vh) * 100);
+    background: linear-gradient(135deg, var(--color-gray-900) 0%, var(--color-gray-800) 100%);
+    padding: var(--spacing-4);
+    gap: var(--spacing-4);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Zone des terrains */
+.affichage-terrains {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-3);
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* Séparateur redimensionnable */
+.affichage-splitter {
+    flex-shrink: 0;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: row-resize;
+    background: transparent;
+    transition: background-color 0.2s;
+    margin: -4px 0;
+    position: relative;
+    z-index: 10;
+}
+
+.affichage-splitter:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.splitter-handle {
+    width: 60px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 2px;
+    transition: all 0.2s;
+}
+
+.affichage-splitter:hover .splitter-handle {
+    background: rgba(255, 255, 255, 0.7);
+    width: 100px;
+}
+
+/* Terrain */
+.affichage-terrain {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-base);
+    max-height: 100%;
+}
+
+/* Thèmes de couleur pour les terrains */
+.affichage-terrain.terrain-occupe.theme-blue {
+    border: 3px solid var(--color-primary);
+}
+
+.affichage-terrain.terrain-occupe.theme-green {
+    border: 3px solid #16a34a;
+}
+
+.affichage-terrain.terrain-occupe.theme-orange {
+    border: 3px solid #ea580c;
+}
+
+.affichage-terrain.terrain-vide {
+    opacity: 0.5;
+    border: 2px dashed var(--color-gray-400);
+}
+
+.terrain-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    padding: var(--spacing-2) var(--spacing-3);
+}
+
+/* Couleurs de header selon le thème */
+.theme-blue .terrain-header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-600) 100%);
+}
+
+.theme-green .terrain-header {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.theme-orange .terrain-header {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+}
+
+/* Fallback pour terrains sans thème */
+.terrain-vide .terrain-header {
+    background: linear-gradient(135deg, var(--color-gray-400) 0%, var(--color-gray-500) 100%);
+}
+
+.terrain-numero {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.terrain-tour {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+}
+
+.terrain-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-2);
+    gap: var(--spacing-1);
+    min-height: 0;
+    overflow: hidden;
+}
+
+.terrain-equipe {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-1);
+    width: 100%;
+}
+
+.terrain-vs {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-400);
+    padding: var(--spacing-1) 0;
+}
+
+.terrain-libre {
+    color: var(--color-gray-400);
+    font-style: italic;
+    font-size: var(--font-size-lg);
+}
+
+/* Joueur en affichage grand format */
+.joueur-affichage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    width: 100%;
+    text-align: center;
+}
+
+.joueur-affichage.joueur-h {
+    background: linear-gradient(135deg, var(--color-blue-100) 0%, var(--color-blue-50) 100%);
+    color: var(--color-blue-800);
+    border: 2px solid var(--color-blue-300);
+}
+
+.joueur-affichage.joueur-f {
+    background: linear-gradient(135deg, var(--color-pink-100) 0%, var(--color-pink-50) 100%);
+    color: var(--color-pink-800);
+    border: 2px solid var(--color-pink-300);
+}
+
+.joueur-nom {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Zone joueurs en attente - optimisé pour vidéoprojection */
+.affichage-attente {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    box-shadow: var(--shadow-lg);
+    flex-shrink: 0;
+    /* Hauteur par défaut, modifiable via le splitter */
+    height: 20vh;
+    min-height: 50px;
+    overflow-y: auto;
+}
+
+.attente-titre {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    color: var(--color-gray-700);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+}
+
+.attente-count {
+    font-weight: var(--font-weight-normal);
+    color: var(--color-gray-500);
+}
+
+.attente-liste {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+    justify-content: center;
+}
+
+.attente-liste .joueur-affichage {
+    width: auto;
+    font-size: var(--font-size-base);
+    padding: var(--spacing-1) var(--spacing-3);
+}
+
+.attente-vide {
+    color: var(--color-gray-400);
+    font-style: italic;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+/* Responsive pour grands écrans */
+@media (min-width: 1200px) {
+    .affichage-terrains {
+        grid-template-columns: repeat(7, 1fr);
+    }
+    
+    .joueur-affichage {
+        font-size: var(--font-size-xl);
+    }
+    
+    .terrain-numero {
+        font-size: var(--font-size-xl);
+    }
+}

@@ -1,0 +1,578 @@
+/**
+ * Styles spécifiques à la page Tournoi
+ */
+
+/* ========================================
+   PAGE TOURNOI
+   ======================================== */
+
+.page-tournoi .main {
+    padding: var(--spacing-2);
+}
+
+/* Modal Statistiques */
+.stats-modal {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+}
+
+.stats-table th,
+.stats-table td {
+    padding: var(--spacing-2) var(--spacing-3);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.stats-table th {
+    background-color: var(--color-gray-100);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stats-table tbody tr:hover {
+    background-color: var(--color-gray-50);
+}
+
+.stats-table .text-center {
+    text-align: center;
+}
+
+/* Tours Container */
+.tours-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+/* Tour */
+.tour {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+
+.tour.tour-actif {
+    border: 2px solid var(--color-primary);
+    box-shadow: var(--shadow-lg), 0 0 0 4px var(--color-primary-100);
+}
+
+.tour.tour-termine {
+    opacity: 0.85;
+}
+
+.tour.tour-attente {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Tour Header */
+.tour-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-1) var(--spacing-3);
+    background: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-50) 100%);
+    border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.tour-actif .tour-header {
+    background: linear-gradient(135deg, var(--color-primary-100) 0%, var(--color-primary-50) 100%);
+    border-color: var(--color-primary-200);
+}
+
+.tour-termine .tour-header {
+    background: linear-gradient(135deg, var(--color-success-light) 0%, #ecfdf5 100%);
+    border-color: #a7f3d0;
+}
+
+.tour-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    margin: 0;
+}
+
+.tour-numero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+}
+
+.tour-termine .tour-numero {
+    background-color: var(--color-success);
+}
+
+.tour-status {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* Tour Body - Matchs */
+.tour-body {
+    padding: var(--spacing-2);
+}
+
+.matchs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+    justify-content: center;
+}
+
+/* Match Card */
+.match-card {
+    display: flex;
+    flex-direction: column;
+    width: var(--match-card-width, 280px);
+    background-color: var(--color-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: var(--border-width) solid var(--border-color);
+}
+
+.match-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.match-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px var(--spacing-2);
+    background-color: var(--color-gray-100);
+    border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.match-terrain {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-700);
+}
+
+.match-body {
+    display: flex;
+    align-items: stretch;
+}
+
+/* Equipe */
+.match-equipe {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    padding: 2px;
+    gap: 2px;
+    transition: background-color var(--transition-fast);
+    background-color: #F9FAFB;
+}
+
+.match-equipe.gagnant {
+    background-color: rgba(16, 185, 129, 0.15);
+}
+
+.match-equipe.perdant {
+    background-color: rgba(239, 68, 68, 0.08);
+}
+
+.equipe-joueurs {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+}
+
+/* Joueur-tag dans les matchs : prend toute la largeur */
+.match-equipe .joueur-tag {
+    width: 100%;
+    min-width: unset;
+    max-width: unset;
+}
+
+.equipe-joueur {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    text-align: center;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.equipe-score {
+    height: 5px;
+    width: 100%;
+    margin-top: 2px;
+    border-radius: 2px;
+    background-color: var(--color-gray-300);
+}
+
+.equipe-score.gagnant {
+    background-color: var(--color-success);
+}
+
+.equipe-score.perdant {
+    background-color: var(--color-danger);
+}
+
+.equipe-score.egalite {
+    background-color: var(--color-warning);
+}
+
+/* Score */
+.match-score-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.match-score {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+}
+
+.score-input {
+    width: 40px;
+    height: 36px;
+    text-align: center;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.score-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.score-separator {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-muted);
+}
+
+/* Bouton victoire rapide */
+.btn-victoire {
+    padding: var(--spacing-1);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: all var(--transition-fast);
+}
+
+.btn-victoire:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.btn-victoire.active {
+    opacity: 1;
+}
+
+.btn-victoire img,
+.btn-victoire svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Séparateur central */
+.match-separator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2);
+    background-color: var(--color-gray-50);
+}
+
+.separator-line {
+    width: 2px;
+    height: 30px;
+    background: linear-gradient(180deg, transparent, var(--color-gray-400), transparent);
+    border-radius: var(--radius-full);
+}
+
+.separator-vs {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-muted);
+    padding: var(--spacing-1) 0;
+}
+
+/* VS container */
+.match-vs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--spacing-2);
+    min-width: 40px;
+    background-color: var(--color-gray-50);
+}
+
+.match-vs {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-muted);
+}
+
+.match-score-display {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary-700);
+}
+
+.match-score-initial {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-secondary);
+    background-color: var(--color-gray-100);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-md);
+}
+
+/* Match footer */
+.match-footer {
+    display: flex;
+    justify-content: center;
+    padding: 2px;
+    border-top: 1px solid var(--border-color);
+    background-color: transparent;
+}
+
+.match-footer .btn {
+    padding: 2px 8px;
+    font-size: var(--font-size-xs);
+}
+
+/* Match avec score */
+.match-card.match-scored {
+    border-color: var(--color-success-300);
+}
+
+.match-card.match-scored .match-header {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+/* Joueurs en attente */
+.joueurs-attente {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4);
+    background-color: var(--color-warning-light);
+    border-radius: var(--radius-lg);
+    margin-top: var(--spacing-4);
+}
+
+.joueurs-attente-title {
+    width: 100%;
+    text-align: center;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: #92400e;
+    margin-bottom: var(--spacing-2);
+}
+
+.joueur-attente-tag {
+    padding: var(--spacing-1) var(--spacing-3);
+    background-color: var(--color-white);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ========================================
+   TOURS & MATCHS AMELIORES
+   ======================================== */
+
+/* Tour actions (bouton validation) */
+.tour-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.tour-actions .btn {
+    padding: 4px 10px;
+    font-size: var(--font-size-xs);
+    box-shadow: none;
+    border: none;
+}
+
+/* Tour futur (grisé) */
+.tour.tour-futur {
+    opacity: 0.5;
+}
+
+/* Tour validé */
+.tour.tour-valide .tour-header {
+    background: linear-gradient(135deg, var(--color-success-light) 0%, #ecfdf5 100%);
+    border-color: #a7f3d0;
+}
+
+.tour.tour-valide .tour-numero {
+    background-color: var(--color-success);
+}
+
+/* Byes du tour */
+.tour-byes {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-2);
+    padding: var(--spacing-1) var(--spacing-2);
+    background: linear-gradient(135deg, var(--color-warning-light) 0%, #fef9c3 100%);
+    border-radius: var(--radius-md);
+    border: 1px solid #fcd34d;
+}
+
+.tour-byes-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: #92400e;
+}
+
+.tour-byes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-1);
+}
+
+/* Sélecteur de tour (footer) */
+.tour-selector {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--color-white);
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.tour-selector:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+/* Badge info */
+.badge-info {
+    background-color: var(--color-primary-100);
+    color: var(--color-primary-700);
+}
+
+/* Panneau de contrôle affichage (dans le header) */
+.affichage-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-2) var(--spacing-3);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.control-label {
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+}
+
+.control-select {
+    padding: var(--spacing-1) var(--spacing-2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    cursor: pointer;
+}
+
+.control-select option {
+    background: var(--color-gray-800);
+    color: white;
+}
+
+.control-value {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-md);
+}
+
+.btn-xs {
+    padding: var(--spacing-1) var(--spacing-2);
+    font-size: var(--font-size-xs);
+    min-width: auto;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-xs:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .tour-byes {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .match-card {
+        width: 100%;
+    }
+    
+    .footer-nav {
+        flex-wrap: wrap;
+        gap: var(--spacing-2);
+    }
+}
