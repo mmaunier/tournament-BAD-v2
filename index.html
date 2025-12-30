@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Générateur de tournoi de Badminton en double">
+    <meta name="author" content="Mikaël MAUNIER, Benoît JACQUOT, Jonathan MERANDAT">
+    <title>Tournoi Badminton</title>
+    
+    <link rel="icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Le contenu sera injecté par JavaScript -->
+    </div>
+
+    <!-- Librairies externes -->
+    <script src="js/ext/xlsx.full.min.js"></script>
+    
+    <!-- Core (EventBus et Router d'abord car utilisés par les autres) -->
+    <script src="js/core/EventBus.js"></script>
+    <script src="js/core/Router.js"></script>
+    
+    <!-- Base de données -->
+    <script src="js/db/Database.js"></script>
+    <script src="js/db/TournoiDB.js"></script>
+    
+    <!-- UI -->
+    <script src="js/ui/Components.js"></script>
+    <script src="js/ui/Modal.js"></script>
+    
+    <!-- Générateur -->
+    <script src="js/utils/GenerateurDynamique.js"></script>
+    <script src="js/utils/TournoiGenerateur.js"></script>
+    
+    <!-- Pages -->
+    <script src="js/pages/AccueilPage.js"></script>
+    <script src="js/pages/TournoiPage.js"></script>
+    <script src="js/pages/ClassementPage.js"></script>
+    <script src="js/pages/AffichagePage.js"></script>
+    
+    <!-- Application -->
+    <script src="js/app.js"></script>
+</body>
+</html>

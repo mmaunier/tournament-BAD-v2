@@ -1,0 +1,199 @@
+/**
+ * Variables CSS - Thème Bleu Pastel
+ * Système de design tokens pour tout le projet
+ */
+
+:root {
+    /* ========================================
+       COULEURS - Thème Bleu Pastel
+       ======================================== */
+    
+    /* Couleurs primaires */
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a8a;
+    
+    /* Couleur principale utilisée */
+    --color-primary: var(--color-primary-500);
+    --color-primary-light: var(--color-primary-100);
+    --color-primary-dark: var(--color-primary-700);
+    
+    /* Couleurs secondaires (accent) */
+    --color-accent: #8b5cf6;
+    --color-accent-light: #c4b5fd;
+    
+    /* Couleurs sémantiques */
+    --color-success: #10b981;
+    --color-success-light: #d1fae5;
+    --color-warning: #f59e0b;
+    --color-warning-light: #fef3c7;
+    --color-danger: #ef4444;
+    --color-danger-light: #fee2e2;
+    --color-info: #06b6d4;
+    --color-info-light: #cffafe;
+    
+    /* Couleurs neutres */
+    --color-white: #ffffff;
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+    --color-black: #000000;
+    
+    /* Couleurs de fond */
+    --bg-body: var(--color-gray-50);
+    --bg-card: var(--color-white);
+    --bg-header: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-800) 100%);
+    --bg-footer: var(--color-gray-100);
+    
+    /* Couleurs de texte */
+    --text-primary: var(--color-gray-800);
+    --text-secondary: var(--color-gray-600);
+    --text-muted: var(--color-gray-400);
+    --text-inverse: var(--color-white);
+    
+    /* Couleurs pour les genres */
+    --color-homme: #b3e0ff;      /* Bleu ciel */
+    --color-homme-dark: #0099e6;
+    --color-femme: #ffcc99;      /* Orange clair */
+    --color-femme-dark: #ff9933;
+    
+    /* Couleurs pour les niveaux (nuances de gris) */
+    --niveau-nc: #9ca3af;        /* Gris moyen */
+    --niveau-p12: #6b7280;
+    --niveau-p11: #4b5563;
+    --niveau-p10: #374151;
+    --niveau-d9: #1f2937;
+    --niveau-d8: #111827;
+    --niveau-d7: #0f172a;
+    --niveau-r6: #7c3aed;        /* Violet pour R */
+    --niveau-r5: #6d28d9;
+    --niveau-r4: #5b21b6;
+    --niveau-n3: #dc2626;        /* Rouge pour N */
+    --niveau-n2: #b91c1c;
+    --niveau-n1: #991b1b;
+    
+    /* Couleurs pour les tours */
+    --color-tour-actif: var(--color-primary-100);
+    --color-tour-termine: var(--color-success-light);
+    --color-tour-attente: var(--color-gray-100);
+    
+    /* ========================================
+       TYPOGRAPHIE
+       ======================================== */
+    
+    --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-family-heading: 'Poppins', var(--font-family-base);
+    
+    --font-size-xs: 0.75rem;    /* 12px */
+    --font-size-sm: 0.875rem;   /* 14px */
+    --font-size-base: 1rem;     /* 16px */
+    --font-size-lg: 1.125rem;   /* 18px */
+    --font-size-xl: 1.25rem;    /* 20px */
+    --font-size-2xl: 1.5rem;    /* 24px */
+    --font-size-3xl: 1.875rem;  /* 30px */
+    --font-size-4xl: 2.25rem;   /* 36px */
+    
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    --line-height-tight: 1.25;
+    --line-height-base: 1.5;
+    --line-height-relaxed: 1.75;
+    
+    /* ========================================
+       ESPACEMENTS
+       ======================================== */
+    
+    --spacing-0: 0;
+    --spacing-1: 0.25rem;   /* 4px */
+    --spacing-2: 0.5rem;    /* 8px */
+    --spacing-3: 0.75rem;   /* 12px */
+    --spacing-4: 1rem;      /* 16px */
+    --spacing-5: 1.25rem;   /* 20px */
+    --spacing-6: 1.5rem;    /* 24px */
+    --spacing-8: 2rem;      /* 32px */
+    --spacing-10: 2.5rem;   /* 40px */
+    --spacing-12: 3rem;     /* 48px */
+    --spacing-16: 4rem;     /* 64px */
+    
+    /* ========================================
+       BORDURES & ARRONDIS
+       ======================================== */
+    
+    --border-width: 1px;
+    --border-color: var(--color-gray-200);
+    --border-color-dark: var(--color-gray-300);
+    
+    --radius-sm: 0.25rem;   /* 4px */
+    --radius-md: 0.5rem;    /* 8px */
+    --radius-lg: 0.75rem;   /* 12px */
+    --radius-xl: 1rem;      /* 16px */
+    --radius-2xl: 1.5rem;   /* 24px */
+    --radius-full: 9999px;
+    
+    /* ========================================
+       OMBRES
+       ======================================== */
+    
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    
+    /* ========================================
+       TRANSITIONS
+       ======================================== */
+    
+    --transition-fast: 150ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+    
+    /* ========================================
+       Z-INDEX
+       ======================================== */
+    
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-modal-backdrop: 300;
+    --z-modal: 400;
+    --z-tooltip: 500;
+    --z-toast: 600;
+    
+    /* ========================================
+       LAYOUT
+       ======================================== */
+    
+    --header-height: 64px;
+    --footer-height: 60px;
+    --sidebar-width: 280px;
+    --container-max-width: 1600px;
+    --match-card-width: 340px;
+}
+
+/* Thème sombre (préparé pour plus tard) */
+@media (prefers-color-scheme: dark) {
+    :root.auto-dark {
+        --bg-body: var(--color-gray-900);
+        --bg-card: var(--color-gray-800);
+        --text-primary: var(--color-gray-100);
+        --text-secondary: var(--color-gray-300);
+        --border-color: var(--color-gray-700);
+    }
+}

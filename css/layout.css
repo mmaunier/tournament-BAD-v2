@@ -1,0 +1,532 @@
+/**
+ * Layout CSS - Structure de page et conteneurs
+ */
+
+/* ========================================
+   APP CONTAINER
+   ======================================== */
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 90px;
+    padding: var(--spacing-2) var(--spacing-4);
+    background: var(--bg-header);
+    color: var(--text-inverse);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Header tournoi avec 2 lignes */
+.header-tournoi {
+    flex-direction: column;
+    align-items: stretch;
+    max-height: none;
+    padding: var(--spacing-2) var(--spacing-4);
+    gap: var(--spacing-2);
+}
+
+.header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-3);
+}
+
+.header-title-sm {
+    font-size: var(--font-size-base) !important;
+}
+
+.header-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-main-title {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+    margin: 0;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    min-width: 200px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    min-width: 200px;
+    justify-content: flex-end;
+}
+
+.header-title-input {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-md);
+    color: var(--text-inverse);
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    width: 150px;
+    transition: all var(--transition-fast);
+}
+
+.header-title-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.header-title-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.header-title {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-tournament-name {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+}
+
+.btn-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-md);
+    color: var(--text-inverse);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.btn-menu:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-menu .icon {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-menu-text {
+    display: inline;
+}
+
+.header-subtitle {
+    font-size: var(--font-size-xs);
+    opacity: 0.8;
+}
+
+/* Header infos (nombre joueurs, tours validés) */
+.header-infos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.header-info-item {
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: var(--font-weight-medium);
+}
+
+.header-phase {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-1) var(--spacing-3);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.header-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-inverse);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.header-menu-btn:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ========================================
+   MAIN CONTENT
+   ======================================== */
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-6);
+    max-width: var(--container-max-width);
+    width: 100%;
+    margin: 0 auto;
+}
+
+.main-full {
+    max-width: none;
+    padding: var(--spacing-4);
+}
+
+/* ========================================
+   SECTIONS / BANDEAUX
+   ======================================== */
+
+.section {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-6);
+    overflow: hidden;
+    animation: fadeInUp var(--transition-slow) ease-out;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-4) var(--spacing-5);
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    border-bottom: var(--border-width) solid var(--color-primary-200);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-800);
+    margin: 0;
+}
+
+.section-title-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-primary-600);
+}
+
+.section-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.section-body {
+    padding: var(--spacing-5);
+}
+
+.section-body.compact {
+    padding: var(--spacing-4);
+}
+
+.section-body.no-padding {
+    padding: 0;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-4) var(--spacing-6);
+    background-color: var(--bg-footer);
+    border-top: var(--border-width) solid var(--border-color);
+    box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.05);
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+}
+
+.footer-info {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.footer-info .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-info .icon svg {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+/* ========================================
+   GRILLES
+   ======================================== */
+
+.grid {
+    display: grid;
+    gap: var(--spacing-4);
+}
+
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========================================
+   FLEX UTILITIES
+   ======================================== */
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+
+.items-start { align-items: flex-start; }
+.items-center { align-items: center; }
+.items-end { align-items: flex-end; }
+
+.justify-start { justify-content: flex-start; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+
+.gap-1 { gap: var(--spacing-1); }
+.gap-2 { gap: var(--spacing-2); }
+.gap-3 { gap: var(--spacing-3); }
+.gap-4 { gap: var(--spacing-4); }
+.gap-6 { gap: var(--spacing-6); }
+
+/* ========================================
+   JOUEURS GRID (Tags)
+   ======================================== */
+
+.joueurs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: var(--spacing-2);
+    min-height: 100px;
+}
+
+/* Container interne des joueurs */
+.joueurs-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 100%;
+}
+
+/* Centrer l'empty-state quand il est présent */
+.joueurs-list:has(.empty-state) {
+    justify-content: center;
+}
+
+.joueurs-grid.empty {
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-gray-50);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+}
+
+/* ========================================
+   CONFIGURATION FORM LAYOUT
+   ======================================== */
+
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-6);
+}
+
+.config-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.config-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-secondary);
+}
+
+.config-value {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+}
+
+/* ========================================
+   MODAL LAYOUT
+   ======================================== */
+
+.modal-container {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal-backdrop);
+    pointer-events: none;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal-backdrop);
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base);
+    pointer-events: auto;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-overlay .modal {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: scale(0.95);
+    z-index: var(--z-modal);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    background-color: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    opacity: 0;
+    transition: all var(--transition-base);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-overlay.show .modal {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.modal-sm { max-width: 400px; }
+.modal-lg { max-width: 700px; }
+.modal-xl { max-width: 900px; }
+.modal-full { max-width: calc(100vw - 40px); }
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-4) var(--spacing-5);
+    border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.modal-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    margin: 0;
+}
+
+.modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+    background-color: var(--color-gray-100);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    flex: 1;
+    padding: var(--spacing-5);
+    overflow-y: auto;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4) var(--spacing-5);
+    border-top: var(--border-width) solid var(--border-color);
+    background-color: var(--color-gray-50);
+}
+
+/* Desktop optimisé - pas de media queries mobiles */

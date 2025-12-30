@@ -1,0 +1,50 @@
+# ===================
+# OS Generated Files
+# ===================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===================
+# IDE / Editors
+# ===================
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# ===================
+# Logs
+# ===================
+*.log
+npm-debug.log*
+
+# ===================
+# Dependencies
+# ===================
+node_modules/
+
+# ===================
+# Build outputs
+# ===================
+dist/
+build/
+
+# ===================
+# Project specific
+# ===================
+# Anciennes versions et fichiers de développement
+assets/js/Anciennes versions/
+assets/js/propositions AIs/
+assets/js/Autres/
+
+# Fichiers temporaires
+*.tmp
+*.temp
