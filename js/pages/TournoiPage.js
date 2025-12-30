@@ -12,6 +12,10 @@ class TournoiPage {
         this.joueursActifs = [];
         // ID source sera défini après chargement du tournoi (basé sur tournoi.id)
         this.sourceId = null;
+        this.container = null;
+        // Timer
+        this.timer = null;
+        this.timerDuration = 8 * 60; // 8 minutes par défaut
     }
 
     /**
@@ -19,6 +23,7 @@ class TournoiPage {
      * @param {HTMLElement} container 
      */
     async render(container) {
+        this.container = container;
         container.innerHTML = '';
         container.className = 'page page-tournoi';
 
@@ -51,10 +56,22 @@ class TournoiPage {
         // Footer
         container.appendChild(this.renderFooter());
 
+        // Initialiser le calcul de la hauteur réelle
+        this.updateRealViewportHeight();
+        window.addEventListener('resize', () => this.updateRealViewportHeight());
+
         // Scroll vers le tour actif après render
         setTimeout(() => {
             this.scrollToTour(this.tourActif);
         }, 100);
+    }
+    
+    /**
+     * Met à jour la variable CSS --real-vh
+     */
+    updateRealViewportHeight() {
+        const realVh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--real-vh', `${realVh}px`);
     }
 
     /**
@@ -93,6 +110,11 @@ class TournoiPage {
             }
             
             console.log(`TournoiPage: ${this.tours.length} tours chargés, ${this.joueursActifs.length} joueurs actifs, ${joueursRetiresIds.size} retirés`);
+            
+            // Récupérer le temps du match configuré dans le tournoi
+            if (this.tournoi?.tempsMatch) {
+                this.timerDuration = this.tournoi.tempsMatch * 60; // Convertir minutes en secondes
+            }
             
             // Trouver le premier tour non validé
             this.tourActif = this.tours.findIndex(t => !t.valide);
@@ -139,6 +161,15 @@ class TournoiPage {
 
         // Actions
         const actions = UI.createElement('div', { className: 'header-actions' });
+        
+        // Bouton Sauvegarder
+        actions.appendChild(UI.button({
+            text: 'Sauvegarder',
+            icon: 'download',
+            variant: 'outline',
+            size: 'sm',
+            onClick: () => this.sauvegarder()
+        }));
 
         actions.appendChild(UI.button({
             text: 'Stats',
@@ -282,6 +313,9 @@ class TournoiPage {
     }
 
     /**
+     * Rendu de la navigation des tours (pour le mode fullscreen)
+     */
+    /**
      * Rendu d'un match
      */
     renderMatch(match, tourIndex, matchIndex, editable) {
@@ -386,55 +420,11 @@ class TournoiPage {
     }
 
     /**
-     * Rendu du footer
+     * Rendu du footer - désactivé, les contrôles sont dans le header
      */
     renderFooter() {
-        const footer = UI.createElement('footer', { className: 'footer' });
-
-        // Navigation rapide
-        const nav = UI.createElement('div', { className: 'footer-nav' });
-        
-        nav.appendChild(UI.button({
-            text: 'Tour précédent',
-            variant: 'outline',
-            onClick: () => this.scrollToTour(Math.max(0, this.tourActif - 1)),
-            disabled: this.tourActif === 0
-        }));
-
-        // Sélecteur de tour
-        const selector = UI.createElement('select', { className: 'tour-selector' });
-        this.tours.forEach((tour, i) => {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `Tour ${i + 1}${tour.valide ? ' ✓' : ''}`;
-            option.selected = i === this.tourActif;
-            selector.appendChild(option);
-        });
-        selector.addEventListener('change', (e) => {
-            const tourIndex = parseInt(e.target.value);
-            this.tourActif = tourIndex;
-            this.scrollToTour(tourIndex);
-        });
-        nav.appendChild(selector);
-
-        nav.appendChild(UI.button({
-            text: 'Tour suivant',
-            variant: 'outline',
-            onClick: () => this.scrollToTour(Math.min(this.tours.length - 1, this.tourActif + 1)),
-            disabled: this.tourActif >= this.tours.length - 1
-        }));
-
-        footer.appendChild(nav);
-
-        // Sauvegarde
-        footer.appendChild(UI.button({
-            text: 'Sauvegarder',
-            icon: 'download',
-            variant: 'ghost',
-            onClick: () => this.sauvegarder()
-        }));
-
-        return footer;
+        // Footer vide - les contrôles ont été déplacés dans le header
+        return UI.createElement('div');
     }
 
     /**
@@ -470,6 +460,14 @@ class TournoiPage {
     renderControleAffichage() {
         const panel = UI.createElement('div', { className: 'affichage-control' });
         
+        // === GROUPE GAUCHE (Timer) ===
+        const leftGroup = UI.createElement('div', { className: 'affichage-control-left' });
+        leftGroup.appendChild(this.renderTimer());
+        panel.appendChild(leftGroup);
+        
+        // === GROUPE DROITE (Terrains, Tour, Afficher, Ouvrir) ===
+        const rightGroup = UI.createElement('div', { className: 'affichage-control-right' });
+        
         // Calculer les terrains automatiquement
         const premierTerrain = this.tournoi?.premierTerrain || 1;
         const nbTerrains = this.tournoi?.nbTerrains || 7;
@@ -486,7 +484,7 @@ class TournoiPage {
             text: terrainsInfo, 
             className: 'control-value' 
         }));
-        panel.appendChild(terrainsGroup);
+        rightGroup.appendChild(terrainsGroup);
         
         // Sélecteur de tour à afficher
         const tourGroup = UI.createElement('div', { className: 'control-group' });
@@ -530,10 +528,10 @@ class TournoiPage {
         });
         tourGroup.appendChild(btnPlus2);
         
-        panel.appendChild(tourGroup);
+        rightGroup.appendChild(tourGroup);
         
         // Bouton envoyer
-        panel.appendChild(UI.button({
+        rightGroup.appendChild(UI.button({
             text: 'Afficher',
             icon: 'play',
             variant: 'primary',
@@ -542,14 +540,233 @@ class TournoiPage {
         }));
         
         // Bouton ouvrir fenêtre
-        panel.appendChild(UI.button({
+        rightGroup.appendChild(UI.button({
             text: 'Ouvrir',
             variant: 'outline',
             size: 'sm',
             onClick: () => this.ouvrirFenetreAffichage()
         }));
         
+        panel.appendChild(rightGroup);
+        
         return panel;
+    }
+
+    /**
+     * Rendu du timer
+     */
+    renderTimer() {
+        const timerContainer = UI.createElement('div', { className: 'timer-container' });
+        
+        // Initialiser le timer si pas encore fait
+        if (!this.timer) {
+            this.timer = new Timer({
+                duration: this.timerDuration,
+                soundPath: 'assets/sons/buzzer.wav',
+                onTick: (remaining) => this.updateTimerDisplay(remaining),
+                onStateChange: (state) => this.updateTimerButtons(state),
+                onComplete: () => this.onTimerComplete()
+            });
+        }
+        
+        // Label Timer
+        timerContainer.appendChild(UI.createElement('label', { text: 'Timer :', className: 'control-label' }));
+        
+        // Bouton Play/Pause
+        const btnPlayPause = UI.createElement('button', {
+            className: 'timer-btn timer-btn-play',
+            attributes: { id: 'timer-btn-play', title: 'Démarrer / Pause' }
+        });
+        btnPlayPause.innerHTML = UI.icons.play;
+        btnPlayPause.addEventListener('click', () => this.timer.togglePlayPause());
+        timerContainer.appendChild(btnPlayPause);
+        
+        // Bouton Stop
+        const btnStop = UI.createElement('button', {
+            className: 'timer-btn timer-btn-stop',
+            attributes: { id: 'timer-btn-stop', title: 'Arrêter' }
+        });
+        btnStop.innerHTML = UI.icons.stop;
+        btnStop.addEventListener('click', () => this.timer.stop());
+        timerContainer.appendChild(btnStop);
+        
+        // Affichage du temps
+        const display = UI.createElement('div', {
+            className: 'timer-display',
+            attributes: { id: 'timer-display', title: 'Double-clic pour configurer' },
+            text: Timer.formatTime(this.timer.getRemaining())
+        });
+        display.style.cursor = 'pointer';
+        display.addEventListener('dblclick', () => this.showTimerConfigModal());
+        timerContainer.appendChild(display);
+        
+        // Bouton Settings
+        const btnSettings = UI.createElement('button', {
+            className: 'timer-btn timer-btn-settings',
+            attributes: { id: 'timer-btn-settings', title: 'Configurer le temps' }
+        });
+        btnSettings.innerHTML = UI.icons.settings;
+        btnSettings.addEventListener('click', () => this.showTimerConfigModal());
+        timerContainer.appendChild(btnSettings);
+        
+        return timerContainer;
+    }
+
+    /**
+     * Met à jour l'affichage du timer
+     */
+    updateTimerDisplay(remaining) {
+        const display = document.getElementById('timer-display');
+        if (display) {
+            display.textContent = Timer.formatTime(remaining);
+            
+            // Ajouter une classe warning si moins de 30 secondes
+            display.classList.toggle('timer-warning', remaining > 0 && remaining <= 30);
+            display.classList.toggle('timer-danger', remaining === 0);
+        }
+        
+        // Envoyer le timer à la page d'affichage via localStorage
+        this.envoyerTimerAffichage(remaining);
+    }
+    
+    /**
+     * Envoie les données du timer vers la page d'affichage
+     */
+    envoyerTimerAffichage(remaining) {
+        const state = this.timer?.getState() || 'stopped';
+        const timerData = {
+            remaining: remaining,
+            state: state,
+            duration: this.timerDuration,
+            timestamp: Date.now()
+        };
+        
+        localStorage.setItem('affichage_timer', JSON.stringify(timerData));
+        
+        // Notifier les autres fenêtres
+        window.dispatchEvent(new StorageEvent('storage', {
+            key: 'affichage_timer',
+            newValue: JSON.stringify(timerData)
+        }));
+    }
+
+    /**
+     * Met à jour les boutons du timer selon l'état
+     */
+    updateTimerButtons(state) {
+        const btnPlay = document.getElementById('timer-btn-play');
+        if (btnPlay) {
+            if (state === 'running') {
+                btnPlay.innerHTML = UI.icons.pause;
+                btnPlay.classList.add('timer-btn-active');
+            } else {
+                btnPlay.innerHTML = UI.icons.play;
+                btnPlay.classList.remove('timer-btn-active');
+            }
+        }
+        
+        // Envoyer l'état au localStorage
+        this.envoyerTimerAffichage(this.timer?.getRemaining() || 0);
+    }
+
+    /**
+     * Appelé quand le timer se termine
+     */
+    onTimerComplete() {
+        console.log('Timer terminé !');
+        // Flash visuel sur l'affichage
+        const display = document.getElementById('timer-display');
+        if (display) {
+            display.classList.add('timer-complete-flash');
+            setTimeout(() => display.classList.remove('timer-complete-flash'), 3000);
+        }
+    }
+
+    /**
+     * Affiche le modal de configuration du timer
+     */
+    showTimerConfigModal() {
+        // Arrêter le timer si en cours
+        if (this.timer.getState() === 'running') {
+            this.timer.pause();
+        }
+        
+        const content = UI.createElement('div', { className: 'timer-config-content' });
+        
+        // Instructions
+        content.appendChild(UI.createElement('p', {
+            className: 'timer-config-help',
+            text: 'Entrez la durée (ex: 8m, 40s, 8m30s, ou un nombre pour les minutes)'
+        }));
+        
+        // Input
+        const inputGroup = UI.createElement('div', { className: 'timer-config-input-group' });
+        const input = UI.createElement('input', {
+            className: 'timer-config-input',
+            attributes: {
+                type: 'text',
+                placeholder: '8m',
+                value: this.formatDurationForInput(this.timerDuration)
+            }
+        });
+        inputGroup.appendChild(input);
+        
+        // Boutons raccourcis
+        const shortcuts = UI.createElement('div', { className: 'timer-config-shortcuts' });
+        ['5m', '8m', '10m', '15m', '30s', '1m'].forEach(preset => {
+            const btn = UI.createElement('button', {
+                className: 'btn btn-sm btn-outline',
+                text: preset
+            });
+            btn.addEventListener('click', () => {
+                input.value = preset;
+            });
+            shortcuts.appendChild(btn);
+        });
+        content.appendChild(inputGroup);
+        content.appendChild(shortcuts);
+        
+        Modal.show({
+            title: 'Configurer le timer',
+            content: content,
+            actions: [
+                {
+                    text: 'Annuler',
+                    variant: 'outline'
+                },
+                {
+                    text: 'Appliquer',
+                    variant: 'primary',
+                    onClick: () => {
+                        const duration = Timer.parseDuration(input.value);
+                        if (duration > 0) {
+                            this.timerDuration = duration;
+                            this.timer.setDuration(duration);
+                            return true; // Ferme le modal
+                        } else {
+                            input.classList.add('input-error');
+                            setTimeout(() => input.classList.remove('input-error'), 1000);
+                            return false; // Empêche la fermeture
+                        }
+                    }
+                }
+            ]
+        });
+        
+        // Focus sur l'input
+        setTimeout(() => input.focus(), 100);
+    }
+
+    /**
+     * Formate la durée pour l'affichage dans l'input
+     */
+    formatDurationForInput(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        if (secs === 0) {
+            return `${mins}m`;
+        }
+        return `${mins}m${secs}s`;
     }
 
     /**

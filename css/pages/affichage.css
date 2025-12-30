@@ -148,10 +148,10 @@ body:has(.page-affichage) #app {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: var(--spacing-2);
-    gap: var(--spacing-1);
+    gap: 0;
     min-height: 0;
     overflow: hidden;
 }
@@ -160,15 +160,21 @@ body:has(.page-affichage) #app {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-1);
+    gap: 2px;
     width: 100%;
+    flex: 1;
+    min-height: 0;
+    justify-content: center;
+    overflow: hidden;
 }
 
 .terrain-vs {
-    font-size: var(--font-size-xl);
+    font-size: clamp(10px, 2vh, 20px);
     font-weight: var(--font-weight-bold);
     color: var(--color-gray-400);
-    padding: var(--spacing-1) 0;
+    padding: clamp(0px, 0.5vh, 4px) 0;
+    flex-shrink: 0;
+    line-height: 1;
 }
 
 .terrain-libre {
@@ -182,12 +188,15 @@ body:has(.page-affichage) #app {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--spacing-2) var(--spacing-3);
+    padding: clamp(2px, 1vh, 8px) var(--spacing-2);
     border-radius: var(--radius-md);
-    font-size: var(--font-size-lg);
+    font-size: clamp(10px, 2vh, 18px);
     font-weight: var(--font-weight-semibold);
     width: 100%;
     text-align: center;
+    min-height: 0;
+    flex-shrink: 1;
+    box-sizing: border-box;
 }
 
 .joueur-affichage.joueur-h {
@@ -206,6 +215,7 @@ body:has(.page-affichage) #app {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.2;
 }
 
 /* Zone joueurs en attente - optimisé pour vidéoprojection */
@@ -261,10 +271,77 @@ body:has(.page-affichage) #app {
    RESPONSIVE
    ======================================== */
 
+/* Petit écran / fenêtre réduite */
+@media (max-height: 500px) {
+    .page-affichage {
+        padding: var(--spacing-2);
+        gap: var(--spacing-2);
+    }
+    
+    .terrain-header {
+        padding: 4px var(--spacing-2);
+    }
+    
+    .terrain-numero {
+        font-size: var(--font-size-sm);
+    }
+    
+    .terrain-tour {
+        font-size: var(--font-size-xs);
+        padding: 1px 4px;
+    }
+    
+    .terrain-body {
+        padding: 4px;
+    }
+    
+    .terrain-vs {
+        font-size: var(--font-size-sm);
+        padding: 1px 0;
+    }
+    
+    .joueur-affichage.joueur-h,
+    .joueur-affichage.joueur-f {
+        border-width: 1px;
+    }
+}
+
+@media (max-height: 350px) {
+    .page-affichage {
+        padding: var(--spacing-1);
+        gap: var(--spacing-1);
+    }
+    
+    .terrain-header {
+        padding: 2px 4px;
+    }
+    
+    .terrain-numero {
+        font-size: 10px;
+    }
+    
+    .terrain-tour {
+        display: none;
+    }
+    
+    .terrain-body {
+        padding: 2px;
+    }
+    
+    .terrain-equipe {
+        gap: 1px;
+    }
+    
+    .terrain-vs {
+        font-size: 10px;
+        padding: 0;
+    }
+}
+
 /* Responsive pour grands écrans */
 @media (min-width: 1200px) {
     .affichage-terrains {
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
     
     .joueur-affichage {
@@ -273,5 +350,99 @@ body:has(.page-affichage) #app {
     
     .terrain-numero {
         font-size: var(--font-size-xl);
+    }
+}
+
+/* ========================================
+   CARTE TIMER
+   ======================================== */
+
+.affichage-timer-card {
+    border: 3px solid var(--color-gray-600);
+    background: linear-gradient(135deg, var(--color-gray-800) 0%, var(--color-gray-900) 100%);
+}
+
+.affichage-timer-card .timer-header {
+    background: linear-gradient(135deg, var(--color-gray-600) 0%, var(--color-gray-700) 100%);
+}
+
+.timer-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: var(--spacing-3);
+}
+
+.timer-card-time {
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: 4rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: 4px;
+}
+
+.timer-card-time.timer-warning {
+    color: var(--color-warning);
+    animation: timer-pulse-affichage 0.5s ease-in-out infinite;
+}
+
+.timer-card-time.timer-danger {
+    color: var(--color-danger);
+    animation: timer-flash-affichage 0.3s ease-in-out infinite;
+}
+
+.timer-card-time.timer-paused {
+    opacity: 0.6;
+}
+
+@keyframes timer-pulse-affichage {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.02); }
+}
+
+@keyframes timer-flash-affichage {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.timer-card-state {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+}
+
+.timer-card-state.state-running {
+    background: var(--color-success);
+    color: white;
+}
+
+.timer-card-state.state-paused {
+    background: var(--color-warning);
+    color: white;
+}
+
+.timer-card-state.state-stopped {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive timer */
+@media (max-height: 500px) {
+    .timer-card-time {
+        font-size: 2.5rem;
+    }
+    
+    .timer-card-body {
+        padding: var(--spacing-2);
+    }
+}
+
+@media (max-height: 400px) {
+    .timer-card-time {
+        font-size: 2rem;
     }
 }

@@ -40,6 +40,37 @@ class AccueilPage {
     }
 
     /**
+     * Réinitialise la configuration aux valeurs par défaut
+     */
+    resetConfig() {
+        this.config.nom = '';
+        this.config.nbTours = 10;
+        this.config.nbTerrains = 7;
+        this.config.premierTerrain = 1;
+        this.config.modeComptage = 'POINTS';
+        this.config.pointsMax = 21;
+        this.config.tempsMatch = 8;
+        this.config.handicaps = false;
+        this.config.handicapParams = {
+            homme: 0,
+            femme: 2,
+            NC: 0,
+            P12: -1,
+            P11: -2,
+            P10: -3,
+            D9: -4,
+            D8: -5,
+            D7: -6,
+            R6: -7,
+            R5: -8,
+            R4: -9,
+            N3: -10,
+            N2: -11,
+            N1: -12
+        };
+    }
+
+    /**
      * Initialise et rend la page
      * @param {HTMLElement} container 
      */
@@ -166,6 +197,7 @@ class AccueilPage {
             events: { click: async () => { 
                 closeMenu(); 
                 if (confirm('Voulez-vous vraiment tout réinitialiser ? Cela supprimera tous les joueurs et rechargera la page.')) {
+                    this.resetConfig();
                     await window.TournoiDB.reset();
                     window.location.reload();
                 }
@@ -675,6 +707,9 @@ class AccueilPage {
         
         // Vider la liste locale des joueurs
         this.joueurs = [];
+        
+        // Réinitialiser la configuration aux valeurs par défaut
+        this.resetConfig();
 
         for (const sheetName of sheetNames) {
             const sheet = workbook.Sheets[sheetName];

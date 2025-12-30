@@ -28,6 +28,15 @@ Application web moderne pour la gestion complète de tournois de badminton en do
 - **Multi-sources** : plusieurs tournois peuvent envoyer vers le même affichage
 - **Thèmes colorés** : différenciation visuelle par source (bleu, vert, orange)
 - **Zone d'attente** : affichage des joueurs en attente
+- **Splitter ajustable** : redimensionnement de la zone terrains/attente
+
+### Timer de Match
+- **Compte à rebours** : timer configurable pour la durée des matchs
+- **Contrôles intuitifs** : boutons Play/Pause/Stop et configuration par roue dentée
+- **Synchronisation** : affichage du timer sur la page vidéoprojecteur
+- **Alertes visuelles** : animation clignotante en fin de temps
+- **Signal sonore** : buzzer à la fin du compte à rebours
+- **Durée par défaut** : utilise le temps configuré dans les paramètres du tournoi
 
 ## ⚙️ Moteur de Génération des Tours
 
@@ -56,6 +65,9 @@ Lorsqu'un joueur est retiré en cours de tournoi :
 ```
 tournament-BAD-v2/
 ├── index.html          # Point d'entrée unique (SPA)
+├── assets/
+│   └── sons/
+│       └── buzzer.wav  # Son de fin de timer
 ├── css/
 │   ├── variables.css   # Variables CSS (couleurs, espacements)
 │   ├── base.css        # Styles de base
@@ -71,14 +83,15 @@ tournament-BAD-v2/
     │   ├── Database.js # Wrapper IndexedDB
     │   └── TournoiDB.js# Opérations CRUD tournois
     ├── pages/
-    │   ├── AccueilPage.js    # Liste des tournois
-    │   ├── TournoiPage.js    # Gestion d'un tournoi
+    │   ├── AccueilPage.js    # Configuration du tournoi
+    │   ├── TournoiPage.js    # Gestion d'un tournoi + timer
     │   ├── ClassementPage.js # Classements et exports
     │   └── AffichagePage.js  # Affichage vidéoprojecteur
     ├── ui/
     │   ├── Components.js # Composants UI réutilisables
     │   └── Modal.js      # Système de modales
     ├── utils/
+    │   ├── Timer.js           # Gestionnaire de compte à rebours
     │   ├── TournoiGenerateur.js   # Génération des tours
     │   └── GenerateurDynamique.js # Algorithmes de rotation
     └── ext/

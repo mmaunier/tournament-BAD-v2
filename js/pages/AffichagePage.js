@@ -7,12 +7,17 @@ class AffichagePage {
         this.terrainsData = {}; // { terrain1: { match, theme, tour }, ... }
         this.joueursAttente = []; // Liste combinée des joueurs en attente
         this.themes = ['blue', 'green', 'orange']; // Couleurs disponibles
+        this.timerData = null; // Données du timer
         
         // Écouter les changements de localStorage
         window.addEventListener('storage', (e) => {
             if (e.key === 'affichage_data') {
                 this.chargerDonnees();
                 this.render(document.querySelector('.page-affichage'));
+            }
+            if (e.key === 'affichage_timer') {
+                this.chargerTimer();
+                this.updateTimerCard();
             }
         });
         
@@ -28,6 +33,66 @@ class AffichagePage {
         // window.innerHeight donne la hauteur réelle disponible dans la fenêtre
         const realVh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--real-vh', `${realVh}px`);
+    }
+    
+    /**
+     * Charge les données du timer depuis localStorage
+     */
+    chargerTimer() {
+        try {
+            this.timerData = JSON.parse(localStorage.getItem('affichage_timer') || 'null');
+        } catch (e) {
+            this.timerData = null;
+        }
+    }
+    
+    /**
+     * Met à jour uniquement la carte timer sans re-render complet
+     */
+    updateTimerCard() {
+        const timerCard = document.getElementById('affichage-timer-card');
+        if (!timerCard) return;
+        
+        if (!this.timerData) {
+            timerCard.style.display = 'none';
+            return;
+        }
+        
+        timerCard.style.display = 'flex';
+        
+        const display = timerCard.querySelector('.timer-card-time');
+        if (display) {
+            display.textContent = this.formatTime(this.timerData.remaining);
+            
+            // Classes d'état
+            display.classList.toggle('timer-warning', this.timerData.remaining > 0 && this.timerData.remaining <= 30);
+            display.classList.toggle('timer-danger', this.timerData.remaining === 0);
+            display.classList.toggle('timer-paused', this.timerData.state === 'paused');
+        }
+        
+        // Indicateur d'état
+        const stateIndicator = timerCard.querySelector('.timer-card-state');
+        if (stateIndicator) {
+            if (this.timerData.state === 'running') {
+                stateIndicator.textContent = '▶ En cours';
+                stateIndicator.className = 'timer-card-state state-running';
+            } else if (this.timerData.state === 'paused') {
+                stateIndicator.textContent = '⏸ Pause';
+                stateIndicator.className = 'timer-card-state state-paused';
+            } else {
+                stateIndicator.textContent = '⏹ Arrêté';
+                stateIndicator.className = 'timer-card-state state-stopped';
+            }
+        }
+    }
+    
+    /**
+     * Formate le temps en mm:ss
+     */
+    formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
 
     /**
@@ -105,6 +170,7 @@ class AffichagePage {
         if (!container) return;
         
         this.chargerDonnees();
+        this.chargerTimer();
         
         container.innerHTML = '';
         container.className = 'page-affichage';
@@ -116,6 +182,9 @@ class AffichagePage {
             const terrainInfo = this.terrainsData[t];
             terrainsZone.appendChild(this.renderTerrain(t, terrainInfo));
         }
+        
+        // Ajouter la carte Timer après les terrains
+        terrainsZone.appendChild(this.renderTimerCard());
         
         container.appendChild(terrainsZone);
         
@@ -130,6 +199,48 @@ class AffichagePage {
         
         // Initialiser le redimensionnement
         this.initSplitter(splitter, terrainsZone, attenteZone, container);
+    }
+    
+    /**
+     * Rendu de la carte Timer
+     */
+    renderTimerCard() {
+        const card = UI.createElement('div', { 
+            className: 'affichage-terrain affichage-timer-card',
+            attributes: { id: 'affichage-timer-card' }
+        });
+        
+        // Header
+        const header = UI.createElement('div', { className: 'terrain-header timer-header' });
+        header.appendChild(UI.createElement('span', { 
+            className: 'terrain-numero', 
+            text: 'Timer' 
+        }));
+        header.appendChild(UI.createElement('span', { 
+            className: 'timer-card-state state-stopped',
+            text: '⏹ Arrêté'
+        }));
+        card.appendChild(header);
+        
+        // Body avec le temps
+        const body = UI.createElement('div', { className: 'terrain-body timer-card-body' });
+        
+        const timeDisplay = UI.createElement('div', {
+            className: 'timer-card-time',
+            text: this.timerData ? this.formatTime(this.timerData.remaining) : '00:00'
+        });
+        body.appendChild(timeDisplay);
+        
+        card.appendChild(body);
+        
+        // Appliquer l'état initial
+        if (!this.timerData) {
+            card.style.display = 'none';
+        } else {
+            this.updateTimerCard();
+        }
+        
+        return card;
     }
     
     /**

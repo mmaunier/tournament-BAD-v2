@@ -132,18 +132,19 @@
     padding: var(--spacing-2);
 }
 
+/* Grille des matchs - colonnes fixes selon la taille d'écran */
 .matchs-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: var(--spacing-2);
-    justify-content: center;
+    /* Par défaut : 1 colonne (mobile) */
+    grid-template-columns: 1fr;
 }
 
 /* Match Card */
 .match-card {
     display: flex;
     flex-direction: column;
-    width: var(--match-card-width, 280px);
+    width: 100%;
     background-color: var(--color-white);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
@@ -173,11 +174,13 @@
 .match-body {
     display: flex;
     align-items: stretch;
+    width: 100%;
 }
 
-/* Equipe */
+/* Equipe - 42.5% chaque (100% - 15% centre) / 2 */
 .match-equipe {
-    flex: 1;
+    flex: 0 0 42.5%;
+    width: 42.5%;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -186,6 +189,7 @@
     gap: 2px;
     transition: background-color var(--transition-fast);
     background-color: #F9FAFB;
+    overflow: hidden;
 }
 
 .match-equipe.gagnant {
@@ -204,11 +208,22 @@
     width: 100%;
 }
 
-/* Joueur-tag dans les matchs : prend toute la largeur */
+/* Joueur-tag dans les matchs : prend toute la largeur avec ellipsis */
 .match-equipe .joueur-tag {
     width: 100%;
-    min-width: unset;
-    max-width: unset;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.match-equipe .joueur-tag-prenom,
+.match-equipe .joueur-tag-nom {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    max-width: 100%;
 }
 
 .equipe-joueur {
@@ -326,27 +341,31 @@
     padding: var(--spacing-1) 0;
 }
 
-/* VS container */
+/* VS container - 15% fixe au centre */
 .match-vs-container {
+    flex: 0 0 15%;
+    width: 15%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0 var(--spacing-2);
-    min-width: 40px;
+    padding: 2px;
     background-color: var(--color-gray-50);
+    overflow: hidden;
 }
 
 .match-vs {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--text-muted);
+    white-space: nowrap;
 }
 
 .match-score-display {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-primary-700);
+    white-space: nowrap;
 }
 
 .match-score-initial {
@@ -497,12 +516,26 @@
 .affichage-control {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: var(--spacing-3);
-    padding: var(--spacing-2) var(--spacing-3);
+    justify-content: space-between;
+    gap: var(--spacing-2);
+    padding: var(--spacing-1) 5px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
     flex-wrap: wrap;
+}
+
+/* Groupe gauche (terrains, tour, afficher) */
+.affichage-control-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+/* Groupe droite (timer) */
+.affichage-control-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
 }
 
 .control-group {
@@ -558,21 +591,353 @@
 }
 
 /* ========================================
-   RESPONSIVE
+   TIMER
    ======================================== */
 
-@media (max-width: 768px) {
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.timer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.timer-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.timer-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.timer-btn-play {
+    background: var(--color-success);
+}
+
+.timer-btn-play:hover {
+    background: var(--color-success-600);
+}
+
+.timer-btn-play.timer-btn-active {
+    background: var(--color-warning);
+}
+
+.timer-btn-play.timer-btn-active:hover {
+    background: var(--color-warning-600, #d97706);
+}
+
+.timer-btn-stop {
+    background: var(--color-danger);
+}
+
+.timer-btn-stop:hover {
+    background: var(--color-danger-600, #dc2626);
+}
+
+.timer-btn-settings {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.timer-display {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    min-width: 55px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.timer-display.timer-warning {
+    color: var(--color-warning);
+    animation: timer-pulse 0.5s ease-in-out infinite;
+}
+
+.timer-display.timer-danger {
+    color: var(--color-danger);
+    background: rgba(220, 38, 38, 0.3);
+}
+
+.timer-display.timer-complete-flash {
+    animation: timer-flash 0.3s ease-in-out 5;
+}
+
+@keyframes timer-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes timer-flash {
+    0%, 100% { background: rgba(220, 38, 38, 0.3); }
+    50% { background: rgba(220, 38, 38, 0.8); }
+}
+
+.control-separator {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 0 4px;
+}
+
+/* Timer config modal */
+.timer-config-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+}
+
+.timer-config-help {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin: 0;
+}
+
+.timer-config-input-group {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.timer-config-input {
+    flex: 1;
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-lg);
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    border: 2px solid var(--color-gray-300);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.timer-config-input:focus {
+    border-color: var(--color-primary);
+}
+
+.timer-config-input.input-error {
+    border-color: var(--color-danger);
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.timer-config-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-1);
+    justify-content: center;
+}
+
+.timer-config-shortcuts .btn {
+    min-width: 50px;
+}
+
+/* ========================================
+   RESPONSIVE - MODE SCROLL
+   Colonnes fixes : 1 (mobile) → 2 (tablette) → 3 (desktop) → 4 (grand écran)
+   ======================================== */
+
+/* Mobile : 1 colonne */
+@media (max-width: 599px) {
+    .matchs-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .match-terrain {
+        font-size: 10px;
+        padding: 1px var(--spacing-1);
+    }
+    
+    .match-equipe {
+        padding: 2px;
+    }
+    
+    .match-equipe .joueur-tag {
+        font-size: 11px;
+        padding: 2px 3px;
+    }
+    
+    .match-equipe .joueur-tag-prenom,
+    .match-equipe .joueur-tag-nom {
+        font-size: 11px;
+    }
+    
+    .match-vs-container {
+        padding: 2px;
+    }
+    
+    .match-vs {
+        font-size: 9px;
+    }
+    
+    .match-score-display {
+        font-size: 11px;
+    }
+    
+    .match-score-initial {
+        font-size: 10px;
+        padding: 1px 3px;
+    }
+    
     .tour-byes {
         flex-direction: column;
         align-items: flex-start;
     }
     
-    .match-card {
-        width: 100%;
+    .header-actions {
+        flex-wrap: wrap;
+        gap: var(--spacing-1);
     }
     
-    .footer-nav {
-        flex-wrap: wrap;
-        gap: var(--spacing-2);
+    .header-actions .btn {
+        padding: var(--spacing-1) var(--spacing-2);
+        font-size: var(--font-size-xs);
+    }
+}
+
+/* Tablette : 2 colonnes */
+@media (min-width: 600px) and (max-width: 1023px) {
+    .matchs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .match-terrain {
+        font-size: 11px;
+    }
+    
+    .match-equipe {
+        padding: 3px;
+    }
+    
+    .match-equipe .joueur-tag {
+        font-size: 12px;
+        padding: 2px 4px;
+    }
+    
+    .match-equipe .joueur-tag-prenom,
+    .match-equipe .joueur-tag-nom {
+        font-size: 12px;
+    }
+    
+    .match-vs-container {
+        padding: 2px;
+    }
+    
+    .match-vs {
+        font-size: 10px;
+    }
+    
+    .match-score-display {
+        font-size: 12px;
+    }
+    
+    .match-score-initial {
+        font-size: 11px;
+        padding: 2px 4px;
+    }
+}
+
+/* Desktop : 3 colonnes */
+@media (min-width: 1024px) and (max-width: 1599px) {
+    .matchs-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .match-terrain {
+        font-size: 12px;
+    }
+    
+    .match-equipe {
+        padding: 4px;
+    }
+    
+    .match-equipe .joueur-tag {
+        font-size: 13px;
+        padding: 3px 5px;
+    }
+    
+    .match-equipe .joueur-tag-prenom,
+    .match-equipe .joueur-tag-nom {
+        font-size: 13px;
+    }
+    
+    .match-vs-container {
+        padding: 3px;
+    }
+    
+    .match-vs {
+        font-size: 11px;
+    }
+    
+    .match-score-display {
+        font-size: 14px;
+    }
+    
+    .match-score-initial {
+        font-size: 12px;
+        padding: 2px 5px;
+    }
+}
+
+/* Grand écran : 4 colonnes */
+@media (min-width: 1600px) {
+    .matchs-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .match-terrain {
+        font-size: var(--font-size-base);
+    }
+    
+    .match-equipe {
+        padding: var(--spacing-2);
+    }
+    
+    .match-equipe .joueur-tag {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+    
+    .match-equipe .joueur-tag-prenom,
+    .match-equipe .joueur-tag-nom {
+        font-size: 14px;
+    }
+    
+    .match-vs-container {
+        padding: 4px;
+    }
+    
+    .match-vs {
+        font-size: 12px;
+    }
+    
+    .match-score-display {
+        font-size: 16px;
+    }
+    
+    .match-score-initial {
+        font-size: 14px;
+        padding: 3px 6px;
     }
 }

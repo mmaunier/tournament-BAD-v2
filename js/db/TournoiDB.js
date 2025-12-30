@@ -254,6 +254,8 @@ class TournoiDB {
         if (config.nbTerrains) this.cache.tournoi.nbTerrains = config.nbTerrains;
         if (config.premierTerrain) this.cache.tournoi.premierTerrain = config.premierTerrain;
         if (config.modeComptage) this.cache.tournoi.modeComptage = config.modeComptage;
+        if (config.pointsMax) this.cache.tournoi.pointsMax = config.pointsMax;
+        if (config.tempsMatch) this.cache.tournoi.tempsMatch = config.tempsMatch;
         
         // Sauvegarder les paramètres de handicap
         if (config.handicaps !== undefined) this.cache.tournoi.handicaps = config.handicaps;

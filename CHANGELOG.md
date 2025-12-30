@@ -5,6 +5,29 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Versionnement Sémantique](https://semver.org/lang/fr/).
 
+## [2.0.1] - 2024-12-30
+
+### Added
+- **Timer de match** : compte à rebours configurable avec contrôles Play/Pause/Stop
+- **Configuration du timer** : modal de paramétrage accessible via roue dentée ou double-clic
+- **Synchronisation timer** : affichage du timer sur la page vidéoprojecteur en temps réel
+- **Signal sonore** : buzzer (`assets/sons/buzzer.wav`) à la fin du compte à rebours
+- **Alertes visuelles** : animation clignotante quand le timer atteint les 30 dernières secondes
+- **Durée par défaut** : le timer utilise automatiquement le `tempsMatch` configuré dans le tournoi
+- **Splitter ajustable** : séparateur redimensionnable entre terrains et zone d'attente sur la page d'affichage
+
+### Changed
+- **Affichage responsive** : les noms des joueurs s'adaptent maintenant à la hauteur de la fenêtre (clamp CSS)
+- **Réinitialisation des paramètres** : lors de l'import d'un nouveau fichier joueurs ou de la réinitialisation, les paramètres reviennent aux valeurs par défaut (temps=8min, points=21, handicaps)
+- **Sauvegarde complète** : `tempsMatch` et `pointsMax` sont maintenant sauvegardés avec le tournoi
+
+### Removed
+- **Mode plein écran** : fonctionnalité retirée (remplacée par le timer plus pratique)
+
+### Fixed
+- **Affichage joueurs** : correction du problème où les noms disparaissaient quand la fenêtre était réduite en hauteur
+- **Configuration timer** : la valeur configurée dans la préparation du tournoi est maintenant correctement utilisée
+
 ## [2.0.0] - 2024-12-30
 
 ### Added
