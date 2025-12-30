@@ -119,8 +119,73 @@ class AffichagePage {
         
         container.appendChild(terrainsZone);
         
+        // Séparateur redimensionnable
+        const splitter = UI.createElement('div', { className: 'affichage-splitter' });
+        splitter.innerHTML = '<div class="splitter-handle"></div>';
+        container.appendChild(splitter);
+        
         // Zone joueurs en attente
-        container.appendChild(this.renderJoueursAttente());
+        const attenteZone = this.renderJoueursAttente();
+        container.appendChild(attenteZone);
+        
+        // Initialiser le redimensionnement
+        this.initSplitter(splitter, terrainsZone, attenteZone, container);
+    }
+    
+    /**
+     * Initialise le comportement du splitter
+     */
+    initSplitter(splitter, terrainsZone, attenteZone, container) {
+        let isDragging = false;
+        let startY = 0;
+        let startAttenteHeight = 0;
+        
+        // Charger la hauteur sauvegardée
+        const savedHeight = localStorage.getItem('affichage_attente_height');
+        if (savedHeight) {
+            attenteZone.style.height = savedHeight + 'px';
+            attenteZone.style.maxHeight = 'none';
+        }
+        
+        const onMouseDown = (e) => {
+            isDragging = true;
+            startY = e.clientY || e.touches?.[0]?.clientY;
+            startAttenteHeight = attenteZone.offsetHeight;
+            document.body.style.cursor = 'row-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        };
+        
+        const onMouseMove = (e) => {
+            if (!isDragging) return;
+            
+            const clientY = e.clientY || e.touches?.[0]?.clientY;
+            const deltaY = startY - clientY;
+            const newHeight = Math.max(50, Math.min(startAttenteHeight + deltaY, container.offsetHeight * 0.6));
+            
+            attenteZone.style.height = newHeight + 'px';
+            attenteZone.style.maxHeight = 'none';
+        };
+        
+        const onMouseUp = () => {
+            if (isDragging) {
+                isDragging = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                // Sauvegarder la hauteur
+                localStorage.setItem('affichage_attente_height', attenteZone.offsetHeight);
+            }
+        };
+        
+        // Événements souris
+        splitter.addEventListener('mousedown', onMouseDown);
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+        
+        // Événements tactiles
+        splitter.addEventListener('touchstart', onMouseDown, { passive: false });
+        document.addEventListener('touchmove', onMouseMove, { passive: false });
+        document.addEventListener('touchend', onMouseUp);
     }
 
     /**

@@ -1064,6 +1064,38 @@ body:has(.page-affichage) #app {
     overflow-y: auto;
 }
 
+/* Séparateur redimensionnable */
+.affichage-splitter {
+    flex-shrink: 0;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: row-resize;
+    background: transparent;
+    transition: background-color 0.2s;
+    margin: -4px 0;
+    position: relative;
+    z-index: 10;
+}
+
+.affichage-splitter:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.splitter-handle {
+    width: 60px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 2px;
+    transition: all 0.2s;
+}
+
+.affichage-splitter:hover .splitter-handle {
+    background: rgba(255, 255, 255, 0.7);
+    width: 100px;
+}
+
 .affichage-terrain {
     background: var(--bg-card);
     border-radius: var(--radius-xl);
@@ -1208,7 +1240,9 @@ body:has(.page-affichage) #app {
     gap: var(--spacing-2);
     box-shadow: var(--shadow-lg);
     flex-shrink: 0;
-    max-height: 25vh;
+    /* Hauteur par défaut, modifiable via le splitter */
+    height: 20vh;
+    min-height: 50px;
     overflow-y: auto;
 }
 
@@ -1249,10 +1283,6 @@ body:has(.page-affichage) #app {
 @media (min-width: 1200px) {
     .affichage-terrains {
         grid-template-columns: repeat(7, 1fr);
-    }
-    
-    .affichage-attente {
-        max-height: 20vh;
     }
     
     .joueur-affichage {
