@@ -6,7 +6,7 @@ Application web moderne pour la gestion complète de tournois de badminton en do
 
 ### Gestion des Tournois
 - **Génération automatique de matchs** en double (Ronde Suisse, sans limite de joueurs)
-- **Système de poules** : de 1 à 7 poules (1 par terrain disponible)
+- **Système de poules** : autant que de terrains disponibles
 - **Gestion dynamique** : retrait de joueurs en cours de tournoi avec recalcul automatique
 - **Importation de joueurs** depuis fichiers Excel (.xlsx)
 - **Sauvegarde automatique** dans IndexedDB (persistance locale)
