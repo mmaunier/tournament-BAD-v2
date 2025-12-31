@@ -18,7 +18,8 @@ Application web moderne pour la gestion complète de tournois de badminton en do
 - **Calcul automatique** des handicaps par équipe (somme des handicaps individuels)
 
 ### Interface Utilisateur
-- **Design responsive** adapté mobile et desktop
+- **Design responsive** adapté mobile, tablette et desktop (5 breakpoints)
+- **Mode hors-ligne** : fonctionne sans connexion internet (polices embarquées)
 - **Navigation SPA** (Single Page Application) avec routeur intégré
 - **Modales interactives** pour la saisie des scores
 - **Statistiques des joueurs** : matchs joués, tours de repos, écarts
@@ -29,6 +30,7 @@ Application web moderne pour la gestion complète de tournois de badminton en do
 - **Thèmes colorés** : différenciation visuelle par source (bleu, vert, orange)
 - **Zone d'attente** : affichage des joueurs en attente
 - **Splitter ajustable** : redimensionnement de la zone terrains/attente
+- **Tooltip joueurs** : survol des noms tronqués affiche le nom complet
 
 ### Timer de Match
 - **Compte à rebours** : timer configurable pour la durée des matchs
@@ -66,9 +68,15 @@ Lorsqu'un joueur est retiré en cours de tournoi :
 tournament-BAD-v2/
 ├── index.html          # Point d'entrée unique (SPA)
 ├── assets/
+│   ├── fonts/          # Polices locales (Inter, Poppins, Oswald)
+│   │   ├── inter-variable.woff2
+│   │   ├── poppins-600.woff2
+│   │   ├── poppins-700.woff2
+│   │   └── oswald-600.woff2
 │   └── sons/
 │       └── buzzer.wav  # Son de fin de timer
 ├── css/
+│   ├── fonts.css       # Définitions @font-face
 │   ├── variables.css   # Variables CSS (couleurs, espacements)
 │   ├── base.css        # Styles de base
 │   ├── components.css  # Composants réutilisables
@@ -105,7 +113,7 @@ git clone https://github.com/mmaunier/tournament-BAD-v2
 cd tournament-BAD-v2
 ```
 
-Aucune dépendance npm requise. L'application fonctionne directement dans le navigateur.
+Aucune dépendance npm requise. L'application fonctionne directement dans le navigateur, même sans connexion internet.
 
 ## 📖 Utilisation
 

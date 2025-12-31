@@ -5,7 +5,27 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Versionnement Sémantique](https://semver.org/lang/fr/).
 
-## [2.0.1] - 2024-12-30
+## [2.0.2] - 2025-12-31
+
+### Added
+- **Mode hors-ligne complet** : toutes les polices (Inter, Poppins, Oswald) sont maintenant stockées localement dans `assets/fonts/`
+- **Polices personnalisées** : ajout de la police Oswald Semi-Bold pour les titres principaux
+- **Tooltip joueurs** : survol des noms de joueurs sur la page vidéoprojecteur affiche le nom complet
+- **Design responsive avancé** : 5 breakpoints adaptatifs (smartphone, tablette, desktop, grand écran, très grand écran)
+
+### Changed
+- **Typographie des titres** : utilisation de la police Oswald pour les titres des pages Accueil et Classement
+- **Page d'accueil améliorée** : distribution verticale uniforme des sections avec Flexbox
+- **Tags joueurs adaptatifs** : taille de police et padding ajustés selon la taille d'écran
+- **Badge compteur joueurs** : nouveau style avec fond bleu clair et texte foncé pour meilleure lisibilité
+- **Harmonisation CSS** : remplacement des valeurs en pixels par des variables CSS (`--spacing-*`)
+- **Suppression des dépendances externes** : plus besoin de connexion internet (Google Fonts remplacé par polices locales)
+
+### Fixed
+- **Layout grandes résolutions** : correction de l'affichage sur écrans ≥1400px et ≥1800px (sections coupées)
+- **Classes de page** : ajout des classes `page-accueil` et `page-classement` pour un ciblage CSS correct
+
+## [2.0.1] - 2025-12-30
 
 ### Added
 - **Timer de match** : compte à rebours configurable avec contrôles Play/Pause/Stop
@@ -28,7 +48,7 @@ et ce projet adhère au [Versionnement Sémantique](https://semver.org/lang/fr/)
 - **Affichage joueurs** : correction du problème où les noms disparaissaient quand la fenêtre était réduite en hauteur
 - **Configuration timer** : la valeur configurée dans la préparation du tournoi est maintenant correctement utilisée
 
-## [2.0.0] - 2024-12-30
+## [2.0.0] - 2025-12-30
 
 ### Added
 - **Architecture SPA** : Refonte complète en Single Page Application
