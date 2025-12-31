@@ -1,6 +1,6 @@
 /**
  * fonts.css - Polices locales (hors-ligne)
- * Inter (variable) et Poppins
+ * Inter (variable), Poppins et Oswald
  */
 
 /* Inter - Police variable (400-700) */
@@ -28,4 +28,13 @@
     font-weight: 700;
     font-display: swap;
     src: url('../assets/fonts/poppins-700.woff2') format('woff2');
+}
+
+/* Oswald Semi-Bold - Police titre */
+@font-face {
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../assets/fonts/oswald-600.woff2') format('woff2');
 }
