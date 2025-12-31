@@ -3,11 +3,59 @@
  */
 
 /* ========================================
-   PAGE ACCUEIL
+   PAGE ACCUEIL - Layout principal
    ======================================== */
 
+.page-accueil {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.page-accueil .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-4);
+    gap: var(--spacing-4);
+}
+
+/* Les deux sections prennent chacune la moitié de l'espace disponible */
+.page-accueil .section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+    min-height: 0;
+}
+
+.page-accueil .section-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
 .page-accueil .section-participants .section-body {
-    min-height: 150px;
+    min-height: 120px;
+}
+
+/* Zone des joueurs avec scroll */
+.page-accueil .joueurs-grid {
+    flex: 1;
+    max-height: none;
+    overflow-y: auto;
+}
+
+/* Compteur de joueurs amélioré */
+.page-accueil #joueurs-count {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    padding: var(--spacing-1) var(--spacing-3);
+    background: linear-gradient(135deg, var(--color-primary-100) 0%, var(--color-primary-200) 100%);
+    color: var(--color-primary-800);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Configuration wrapper */
@@ -38,7 +86,7 @@
 
 .config-item-checkbox {
     justify-content: flex-end;
-    padding-bottom: 6px;
+    padding-bottom: var(--spacing-1);
 }
 
 /* Zone handicaps */
@@ -70,7 +118,7 @@
 .handicap-grid-small {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: var(--spacing-1);
 }
 
 .handicap-item-small {
@@ -185,4 +233,193 @@
 
 .joueurs-retrait-modal .joueur-tag {
     cursor: pointer;
+}
+/* ========================================
+   RESPONSIVE - Tailles de polices et tags joueurs
+   ======================================== */
+
+/* Smartphone (< 576px) */
+@media (max-width: 575.98px) {
+    .page-accueil .main {
+        padding: var(--spacing-2);
+        gap: var(--spacing-2);
+    }
+    
+    .page-accueil .section-header {
+        padding: var(--spacing-2) var(--spacing-3);
+    }
+    
+    .page-accueil .section-title {
+        font-size: var(--font-size-base);
+    }
+    
+    .page-accueil .section-body {
+        padding: var(--spacing-2);
+    }
+    
+    .page-accueil .joueur-tag {
+        padding: var(--spacing-1);
+        min-width: 60px;
+    }
+    
+    .page-accueil .joueur-tag-prenom {
+        font-size: 10px;
+    }
+    
+    .page-accueil .joueur-tag-nom {
+        font-size: 9px;
+    }
+    
+    .config-line {
+        gap: var(--spacing-2);
+    }
+    
+    .config-item .form-label {
+        font-size: var(--font-size-xs);
+    }
+}
+
+/* Tablette (576px - 991px) */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .page-accueil .section-title {
+        font-size: var(--font-size-lg);
+    }
+    
+    .page-accueil .joueur-tag {
+        padding: var(--spacing-1) var(--spacing-2);
+        min-width: 75px;
+    }
+    
+    .page-accueil .joueur-tag-prenom {
+        font-size: 11px;
+    }
+    
+    .page-accueil .joueur-tag-nom {
+        font-size: 10px;
+    }
+}
+
+/* Desktop (992px - 1399px) */
+@media (min-width: 992px) and (max-width: 1399.98px) {
+    .page-accueil .section-title {
+        font-size: var(--font-size-xl);
+    }
+    
+    .page-accueil .joueur-tag {
+        padding: var(--spacing-2);
+        min-width: 85px;
+        border-radius: var(--radius-lg);
+    }
+    
+    .page-accueil .joueur-tag-prenom {
+        font-size: 12px;
+    }
+    
+    .page-accueil .joueur-tag-nom {
+        font-size: 11px;
+    }
+    
+    .page-accueil .joueur-tag-niveau {
+        padding: 2px 8px;
+        font-size: 10px;
+    }
+}
+
+/* Grand écran (>= 1400px) */
+@media (min-width: 1400px) {
+    .page-accueil .main {
+        padding: var(--spacing-4);
+        gap: var(--spacing-4);
+    }
+    
+    .page-accueil .section-header {
+        padding: var(--spacing-3) var(--spacing-4);
+    }
+    
+    .page-accueil .section-title {
+        font-size: var(--font-size-xl);
+    }
+    
+    .page-accueil .section-body {
+        padding: var(--spacing-4);
+    }
+    
+    .page-accueil .joueurs-grid {
+        gap: var(--spacing-2);
+    }
+    
+    .page-accueil .joueur-tag {
+        padding: var(--spacing-2) var(--spacing-3);
+        min-width: 100px;
+        border-radius: var(--radius-lg);
+        border-width: 3px;
+    }
+    
+    .page-accueil .joueur-tag-prenom {
+        font-size: 14px;
+    }
+    
+    .page-accueil .joueur-tag-nom {
+        font-size: 12px;
+    }
+    
+    .page-accueil .joueur-tag-niveau {
+        padding: 3px 10px;
+        font-size: 11px;
+    }
+    
+    .page-accueil #joueurs-count {
+        font-size: var(--font-size-lg);
+        padding: var(--spacing-2) var(--spacing-4);
+    }
+    
+    .config-line {
+        gap: var(--spacing-6);
+    }
+    
+    .config-item .form-label {
+        font-size: var(--font-size-base);
+    }
+    
+    .handicap-label-small {
+        font-size: 13px;
+    }
+}
+
+/* Très grand écran (>= 1800px) */
+@media (min-width: 1800px) {
+    .page-accueil .main {
+        padding: var(--spacing-3);
+        gap: var(--spacing-3);
+    }
+    
+    .page-accueil .section-header {
+        padding: var(--spacing-2) var(--spacing-4);
+    }
+    
+    .page-accueil .section-title {
+        font-size: var(--font-size-xl);
+    }
+    
+    .page-accueil .section-body {
+        padding: var(--spacing-3);
+    }
+    
+    .page-accueil .joueur-tag {
+        padding: var(--spacing-2) var(--spacing-3);
+        min-width: 120px;
+    }
+    
+    .page-accueil .joueur-tag-prenom {
+        font-size: 16px;
+    }
+    
+    .page-accueil .joueur-tag-nom {
+        font-size: 14px;
+    }
+    
+    .page-accueil .joueur-tag-niveau {
+        padding: 4px 12px;
+        font-size: 12px;
+    }
 }

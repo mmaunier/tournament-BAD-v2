@@ -75,6 +75,7 @@ class AccueilPage {
      * @param {HTMLElement} container 
      */
     async render(container) {
+        container.className = 'page page-accueil';
         container.innerHTML = '';
         
         // Charger les joueurs de la base

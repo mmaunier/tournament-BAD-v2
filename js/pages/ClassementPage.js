@@ -17,6 +17,7 @@ class ClassementPage {
      * @param {HTMLElement} container 
      */
     async render(container) {
+        container.className = 'page page-classement';
         container.innerHTML = '';
 
         // Charger les données
