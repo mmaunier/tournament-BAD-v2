@@ -366,17 +366,24 @@ class AffichagePage {
      * Rendu d'un joueur en grand format
      */
     renderJoueurAffichage(joueur) {
-        const div = UI.createElement('div', { 
-            className: `joueur-affichage joueur-${(joueur.genre || 'H').toLowerCase()}` 
-        });
+        // Nom complet pour le tooltip
+        const nomComplet = joueur.prenom 
+            ? `${joueur.prenom} ${joueur.nom || ''}`
+            : joueur.nom || 'Inconnu';
         
-        const nom = joueur.prenom 
+        // Nom affiché (abrégé)
+        const nomAffiche = joueur.prenom 
             ? `${joueur.prenom} ${joueur.nom?.charAt(0) || ''}.`
             : joueur.nom || 'Inconnu';
         
+        const div = UI.createElement('div', { 
+            className: `joueur-affichage joueur-${(joueur.genre || 'H').toLowerCase()}`,
+            attributes: { title: nomComplet }
+        });
+        
         div.appendChild(UI.createElement('span', { 
             className: 'joueur-nom', 
-            text: nom 
+            text: nomAffiche 
         }));
         
         return div;
