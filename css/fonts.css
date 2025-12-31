@@ -1,0 +1,31 @@
+/**
+ * fonts.css - Polices locales (hors-ligne)
+ * Inter (variable) et Poppins
+ */
+
+/* Inter - Police variable (400-700) */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('../assets/fonts/inter-variable.woff2') format('woff2');
+}
+
+/* Poppins 600 (Semi-Bold) */
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../assets/fonts/poppins-600.woff2') format('woff2');
+}
+
+/* Poppins 700 (Bold) */
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../assets/fonts/poppins-700.woff2') format('woff2');
+}
