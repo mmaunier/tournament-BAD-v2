@@ -35,7 +35,8 @@ Application web moderne pour la gestion complète de tournois de badminton en do
 ### Timer de Match
 - **Compte à rebours** : timer configurable pour la durée des matchs
 - **Contrôles intuitifs** : boutons Play/Pause/Stop et configuration par roue dentée
-- **Synchronisation** : affichage du timer sur la page vidéoprojecteur
+- **Synchronisation multi-fenêtres** : le timer est partagé entre toutes les instances
+- **Contrôle partagé** : pause/stop depuis n'importe quelle fenêtre affecte toutes les autres
 - **Alertes visuelles** : animation clignotante en fin de temps
 - **Signal sonore** : buzzer à la fin du compte à rebours
 - **Durée par défaut** : utilise le temps configuré dans les paramètres du tournoi

@@ -1,6 +1,6 @@
 /**
  * AffichagePage - Page d'affichage grand format pour vidéoprojecteur
- * Reçoit les données des pages Tournoi via localStorage
+ * Reçoit les données des pages Tournoi via localStorage (polling)
  */
 class AffichagePage {
     constructor() {
@@ -8,8 +8,11 @@ class AffichagePage {
         this.joueursAttente = []; // Liste combinée des joueurs en attente
         this.themes = ['blue', 'green', 'orange']; // Couleurs disponibles
         this.timerData = null; // Données du timer
+        this.lastTimerTimestamp = 0; // Pour détecter les changements
+        this.lastDataTimestamp = 0; // Pour détecter les changements de données
+        this.syncInterval = null; // Interval de polling
         
-        // Écouter les changements de localStorage
+        // Écouter les changements de localStorage (fonctionne entre onglets avec http://)
         window.addEventListener('storage', (e) => {
             if (e.key === 'affichage_data') {
                 this.chargerDonnees();
@@ -24,6 +27,51 @@ class AffichagePage {
         // Calculer la hauteur réelle de la fenêtre (sans barre de titre/menu navigateur)
         this.updateRealViewportHeight();
         window.addEventListener('resize', () => this.updateRealViewportHeight());
+    }
+    
+    /**
+     * Démarre le polling pour synchroniser les données (fonctionne avec file://)
+     */
+    startPolling() {
+        if (this.syncInterval) return;
+        
+        this.syncInterval = setInterval(() => {
+            // Vérifier les mises à jour du timer
+            try {
+                const timerStr = localStorage.getItem('affichage_timer');
+                if (timerStr) {
+                    const data = JSON.parse(timerStr);
+                    if (data.timestamp && data.timestamp > this.lastTimerTimestamp) {
+                        this.lastTimerTimestamp = data.timestamp;
+                        this.timerData = data;
+                        this.updateTimerCard();
+                    }
+                }
+            } catch (e) { /* ignorer */ }
+            
+            // Vérifier les mises à jour des données terrains/joueurs
+            try {
+                const dataStr = localStorage.getItem('affichage_data');
+                if (dataStr) {
+                    const data = JSON.parse(dataStr);
+                    if (data.timestamp && data.timestamp > this.lastDataTimestamp) {
+                        this.lastDataTimestamp = data.timestamp;
+                        this.chargerDonnees();
+                        this.render(document.querySelector('.page-affichage'));
+                    }
+                }
+            } catch (e) { /* ignorer */ }
+        }, 250); // Polling toutes les 250ms
+    }
+    
+    /**
+     * Arrête le polling
+     */
+    stopPolling() {
+        if (this.syncInterval) {
+            clearInterval(this.syncInterval);
+            this.syncInterval = null;
+        }
     }
     
     /**
@@ -171,6 +219,9 @@ class AffichagePage {
         
         this.chargerDonnees();
         this.chargerTimer();
+        
+        // Démarrer le polling pour synchronisation (fonctionne avec file://)
+        this.startPolling();
         
         container.innerHTML = '';
         container.className = 'page-affichage';

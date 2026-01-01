@@ -238,6 +238,16 @@
     font-weight: var(--font-weight-medium);
     border: none;
     background: transparent;
+    /* Cacher les flèches natives du spinner */
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* Cacher les flèches natives pour Chrome, Safari, Edge, Opera */
+.number-spinner-value::-webkit-outer-spin-button,
+.number-spinner-value::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* ========================================

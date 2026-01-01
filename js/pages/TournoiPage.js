@@ -16,6 +16,232 @@ class TournoiPage {
         // Timer
         this.timer = null;
         this.timerDuration = 8 * 60; // 8 minutes par défaut
+        
+        // Synchronisation du timer entre fenêtres via localStorage polling
+        this.lastTimerTimestamp = 0;
+        this.lastCommandTimestamp = 0; // Pour détecter les nouvelles commandes
+        this.timerSyncInterval = null;
+        this.isTimerRunningLocally = false; // true si le timer tourne dans CETTE fenêtre
+    }
+    
+    /**
+     * Démarre le polling pour synchroniser le timer depuis d'autres fenêtres
+     * Fonctionne avec N fenêtres (1 à 7+)
+     */
+    startTimerSync() {
+        if (this.timerSyncInterval) return;
+        
+        this.timerSyncInterval = setInterval(() => {
+            try {
+                // 1. Vérifier les commandes (play/pause/stop) d'autres fenêtres
+                const cmd = JSON.parse(localStorage.getItem('timer_command') || 'null');
+                if (cmd && cmd.timestamp > this.lastCommandTimestamp) {
+                    this.lastCommandTimestamp = cmd.timestamp;
+                    this.executeTimerCommand(cmd);
+                }
+                
+                // 2. Synchroniser l'affichage si on n'est pas la fenêtre qui fait tourner le timer
+                if (!this.isTimerRunningLocally) {
+                    const data = JSON.parse(localStorage.getItem('affichage_timer') || 'null');
+                    if (data && data.timestamp > this.lastTimerTimestamp) {
+                        this.lastTimerTimestamp = data.timestamp;
+                        this.onTimerSync(data);
+                    }
+                }
+            } catch (e) {
+                // Ignorer les erreurs de parsing
+            }
+        }, 200); // Vérifier toutes les 200ms
+    }
+    
+    /**
+     * Exécute une commande de timer reçue (depuis cette fenêtre ou une autre)
+     */
+    executeTimerCommand(cmd) {
+        if (!this.timer) return;
+        
+        // Générer un ID unique pour cette fenêtre si pas encore fait
+        if (!this.windowId) {
+            this.windowId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        switch (cmd.action) {
+            case 'play':
+                // Seule la fenêtre désignée comme maître peut démarrer le timer
+                if (cmd.masterId === this.windowId) {
+                    // Synchroniser le temps restant avant de démarrer
+                    if (cmd.remaining != null) {
+                        this.timer.remaining = cmd.remaining;
+                    }
+                    if (cmd.duration != null) {
+                        this.timerDuration = cmd.duration;
+                        this.timer.duration = cmd.duration;
+                    }
+                    this.timer.play();
+                    this.isTimerRunningLocally = true;
+                } else {
+                    // Les autres fenêtres ne font que synchroniser l'affichage
+                    this.isTimerRunningLocally = false;
+                }
+                // Mettre à jour l'affichage pour toutes les fenêtres
+                this.updateTimerButtons('running');
+                break;
+                
+            case 'pause':
+                if (this.isTimerRunningLocally) {
+                    this.timer.pause();
+                }
+                this.isTimerRunningLocally = false;
+                // Synchroniser le temps restant depuis la commande
+                if (cmd.remaining != null) {
+                    this.timer.remaining = cmd.remaining;
+                    this.updateTimerDisplayLocal(cmd.remaining);
+                }
+                // Mettre à jour l'affichage pour toutes les fenêtres
+                this.updateTimerButtons('paused');
+                break;
+                
+            case 'stop':
+                if (this.isTimerRunningLocally) {
+                    this.timer.stop();
+                }
+                this.isTimerRunningLocally = false;
+                // Mettre à jour l'affichage pour toutes les fenêtres
+                this.updateTimerButtons('stopped');
+                this.updateTimerDisplayLocal(this.timerDuration);
+                break;
+        }
+    }
+    
+    /**
+     * Envoie une commande de timer à toutes les fenêtres
+     * @param {string} action - 'play', 'pause' ou 'stop'
+     * @param {boolean} iAmMaster - Si true, cette fenêtre devient le maître du timer
+     */
+    sendTimerCommand(action, iAmMaster = false) {
+        // Générer un ID unique pour cette fenêtre si pas encore fait
+        if (!this.windowId) {
+            this.windowId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        const cmd = {
+            action: action,
+            timestamp: Date.now(),
+            remaining: this.timer?.getRemaining() || this.timerDuration,
+            duration: this.timerDuration,
+            masterId: iAmMaster ? this.windowId : null // ID de la fenêtre qui doit être maître
+        };
+        this.lastCommandTimestamp = cmd.timestamp;
+        localStorage.setItem('timer_command', JSON.stringify(cmd));
+        
+        // Exécuter aussi localement (avec notre ID)
+        this.executeTimerCommand(cmd);
+    }
+    
+    /**
+     * Toggle Play/Pause partagé
+     */
+    togglePlayPauseShared() {
+        // Vérifier l'état global du timer (depuis localStorage)
+        const data = JSON.parse(localStorage.getItem('affichage_timer') || 'null');
+        const currentState = data?.state || this.timer?.getState() || 'stopped';
+        
+        if (currentState === 'running') {
+            this.sendTimerCommand('pause');
+        } else {
+            // Synchroniser le temps restant depuis localStorage avant de reprendre
+            if (data?.remaining != null && !this.isTimerRunningLocally) {
+                this.timer.remaining = data.remaining;
+            }
+            if (data?.duration != null) {
+                this.timerDuration = data.duration;
+                this.timer.duration = data.duration;
+            }
+            // Cette fenêtre devient le maître du timer
+            this.sendTimerCommand('play', true);
+        }
+    }
+    
+    /**
+     * Stop partagé
+     */
+    stopShared() {
+        this.sendTimerCommand('stop');
+    }
+    
+    /**
+     * Met à jour l'affichage local du timer (sans envoyer aux autres)
+     */
+    updateTimerDisplayLocal(remaining) {
+        const display = document.getElementById('timer-display');
+        if (display) {
+            display.textContent = Timer.formatTime(remaining);
+            display.classList.toggle('timer-warning', remaining > 0 && remaining <= 30);
+            display.classList.toggle('timer-danger', remaining === 0);
+        }
+    }
+    
+    /**
+     * Arrête le polling de synchronisation
+     */
+    stopTimerSync() {
+        if (this.timerSyncInterval) {
+            clearInterval(this.timerSyncInterval);
+            this.timerSyncInterval = null;
+        }
+    }
+    
+    /**
+     * Reçoit une mise à jour de synchronisation timer d'une autre fenêtre
+     */
+    onTimerSync(data) {
+        // Mettre à jour l'affichage local du timer
+        const display = document.getElementById('timer-display');
+        if (display) {
+            display.textContent = Timer.formatTime(data.remaining);
+            display.classList.toggle('timer-warning', data.remaining > 0 && data.remaining <= 30);
+            display.classList.toggle('timer-danger', data.remaining === 0);
+        }
+        
+        // Mettre à jour l'état des boutons
+        const btnPlay = document.getElementById('timer-btn-play');
+        if (btnPlay) {
+            if (data.state === 'running') {
+                btnPlay.innerHTML = UI.icons.pause;
+                btnPlay.classList.add('timer-btn-active');
+            } else {
+                btnPlay.innerHTML = UI.icons.play;
+                btnPlay.classList.remove('timer-btn-active');
+            }
+        }
+        
+        // Synchroniser la durée si elle a changé
+        if (this.timer && data.duration && data.duration !== this.timerDuration) {
+            this.timerDuration = data.duration;
+            this.timer.setDuration(data.duration);
+        }
+    }
+    
+    /**
+     * Met à jour l'apparence des boutons du timer selon l'état
+     * @param {string} state - 'running', 'paused' ou 'stopped'
+     */
+    updateTimerButtons(state) {
+        const btnPlay = document.getElementById('timer-btn-play');
+        if (btnPlay) {
+            if (state === 'running') {
+                btnPlay.innerHTML = UI.icons.pause;
+                btnPlay.classList.add('timer-btn-active');
+            } else {
+                btnPlay.innerHTML = UI.icons.play;
+                btnPlay.classList.remove('timer-btn-active');
+            }
+        }
+        
+        // Si c'est cette fenêtre qui fait tourner le timer, envoyer l'état aux autres
+        if (this.isTimerRunningLocally || state === 'running') {
+            this.envoyerTimerAffichage(this.timer?.getRemaining() || this.timerDuration);
+        }
     }
 
     /**
@@ -59,6 +285,9 @@ class TournoiPage {
         // Initialiser le calcul de la hauteur réelle
         this.updateRealViewportHeight();
         window.addEventListener('resize', () => this.updateRealViewportHeight());
+
+        // Démarrer la synchronisation du timer avec les autres fenêtres
+        this.startTimerSync();
 
         // Scroll vers le tour actif après render
         setTimeout(() => {
@@ -578,7 +807,7 @@ class TournoiPage {
             attributes: { id: 'timer-btn-play', title: 'Démarrer / Pause' }
         });
         btnPlayPause.innerHTML = UI.icons.play;
-        btnPlayPause.addEventListener('click', () => this.timer.togglePlayPause());
+        btnPlayPause.addEventListener('click', () => this.togglePlayPauseShared());
         timerContainer.appendChild(btnPlayPause);
         
         // Bouton Stop
@@ -587,7 +816,7 @@ class TournoiPage {
             attributes: { id: 'timer-btn-stop', title: 'Arrêter' }
         });
         btnStop.innerHTML = UI.icons.stop;
-        btnStop.addEventListener('click', () => this.timer.stop());
+        btnStop.addEventListener('click', () => this.stopShared());
         timerContainer.appendChild(btnStop);
         
         // Affichage du temps
@@ -630,43 +859,23 @@ class TournoiPage {
     }
     
     /**
-     * Envoie les données du timer vers la page d'affichage
+     * Envoie les données du timer vers la page d'affichage et les autres fenêtres
      */
     envoyerTimerAffichage(remaining) {
         const state = this.timer?.getState() || 'stopped';
+        const now = Date.now();
         const timerData = {
             remaining: remaining,
             state: state,
             duration: this.timerDuration,
-            timestamp: Date.now()
+            timestamp: now
         };
         
+        // Mettre à jour notre timestamp pour éviter de retraiter nos propres mises à jour
+        this.lastTimerTimestamp = now;
+        
+        // Sauvegarder dans localStorage pour synchronisation avec toutes les fenêtres
         localStorage.setItem('affichage_timer', JSON.stringify(timerData));
-        
-        // Notifier les autres fenêtres
-        window.dispatchEvent(new StorageEvent('storage', {
-            key: 'affichage_timer',
-            newValue: JSON.stringify(timerData)
-        }));
-    }
-
-    /**
-     * Met à jour les boutons du timer selon l'état
-     */
-    updateTimerButtons(state) {
-        const btnPlay = document.getElementById('timer-btn-play');
-        if (btnPlay) {
-            if (state === 'running') {
-                btnPlay.innerHTML = UI.icons.pause;
-                btnPlay.classList.add('timer-btn-active');
-            } else {
-                btnPlay.innerHTML = UI.icons.play;
-                btnPlay.classList.remove('timer-btn-active');
-            }
-        }
-        
-        // Envoyer l'état au localStorage
-        this.envoyerTimerAffichage(this.timer?.getRemaining() || 0);
     }
 
     /**
@@ -814,6 +1023,9 @@ class TournoiPage {
             matchs: tour.matchs,
             joueursAttente: joueursAttente
         };
+        
+        // Ajouter un timestamp pour le polling (synchronisation avec file://)
+        data.timestamp = Date.now();
         
         // Sauvegarder
         localStorage.setItem('affichage_data', JSON.stringify(data));

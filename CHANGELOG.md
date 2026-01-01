@@ -5,6 +5,21 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Versionnement Sémantique](https://semver.org/lang/fr/).
 
+## [2.0.3] - 2026-01-01
+
+### Added
+- **Contrôle partagé du timer** : les boutons Play/Pause/Stop fonctionnent depuis n'importe quelle fenêtre et affectent toutes les instances
+- **Système de commandes synchronisées** : les actions du timer sont propagées via localStorage à toutes les fenêtres ouvertes
+- **Transfert de maîtrise** : la fenêtre qui clique sur "Play" devient automatiquement le maître du timer
+
+### Changed
+- **Architecture du timer** : refactorisation complète du système de synchronisation avec gestion des commandes partagées
+- **Fréquence de polling** : passage de 250ms à 200ms pour une meilleure réactivité
+- **Spinners numériques** : masquage des flèches natives des champs de saisie numérique (handicaps, scores) pour une interface plus épurée
+
+### Fixed
+- **Pause/Stop multi-fenêtres** : correction du problème où seule la fenêtre "maître" pouvait contrôler le timer
+
 ## [2.0.2] - 2025-12-31
 
 ### Added
