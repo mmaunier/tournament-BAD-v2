@@ -52,9 +52,14 @@ class ClassementPage {
             this.tournoi = await window.TournoiDB.getTournoi();
             this.classement = await window.TournoiDB.getClassement();
             
-            // Calculer la séparation 3/7 - 4/7
+            // Calculer la séparation basée sur le nombre de terrains
+            // Poule haute = floor(3 * total / nbTerrains) - médiane inférieure
+            // Poule basse = le reste (ceil(4 * total / nbTerrains))
             const total = this.classement.length;
-            this.separationIndex = Math.ceil(total * 3 / 7);
+            const nbTerrains = this.tournoi?.nbTerrains || 7;
+            
+            // Arrondi bancaire inférieur pour la poule haute (les meilleurs)
+            this.separationIndex = Math.floor(3 * total / nbTerrains);
             
             // Initialiser les poules
             this.pouleHaute = this.classement.slice(0, this.separationIndex);
