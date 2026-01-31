@@ -61,8 +61,17 @@ class TournoiGenerateur {
                 // Convertir les paires en matchs
                 const matchs = this.convertirEnMatchs(tourPaires, t);
                 
-                // Convertir les indices de byes en objets joueurs
-                const byesConverted = tourByes.map(idx => this.joueurs[idx]).filter(j => j);
+                // Convertir les indices de byes en objets joueurs avec détection des undefined
+                const byesRaw = tourByes.map(idx => ({ idx, joueur: this.joueurs[idx] }));
+                const byesUndefined = byesRaw.filter(b => !b.joueur);
+                
+                if (byesUndefined.length > 0) {
+                    console.warn(`⚠️ Tour ${t + 1}: ${byesUndefined.length} bye(s) avec joueur undefined!`);
+                    console.warn(`   Indices concernés: [${byesUndefined.map(b => b.idx).join(', ')}]`);
+                    console.warn(`   Nombre de joueurs disponibles: ${this.joueurs.length}`);
+                }
+                
+                const byesConverted = byesRaw.map(b => b.joueur).filter(j => j);
                 
                 this.liste.push({
                     matchs: matchs,
@@ -101,16 +110,36 @@ class TournoiGenerateur {
             
             const matchIndex = i / 2;
             
+            // Construire les équipes avec détection des joueurs undefined
+            const equipe1Raw = [
+                this.joueurs[paire1[0]],
+                this.joueurs[paire1[1]]
+            ];
+            const equipe2Raw = [
+                this.joueurs[paire2[0]],
+                this.joueurs[paire2[1]]
+            ];
+            
+            // Vérifier si des joueurs sont undefined (bug potentiel en amont)
+            const undefinedEquipe1 = equipe1Raw.filter(j => !j);
+            const undefinedEquipe2 = equipe2Raw.filter(j => !j);
+            
+            if (undefinedEquipe1.length > 0 || undefinedEquipe2.length > 0) {
+                console.warn(`⚠️ Tour ${tourNum + 1}, Match ${matchIndex + 1}: joueur(s) undefined détecté(s)!`);
+                console.warn(`   Indices paire1: [${paire1[0]}, ${paire1[1]}], paire2: [${paire2[0]}, ${paire2[1]}]`);
+                console.warn(`   Nombre de joueurs disponibles: ${this.joueurs.length}`);
+                if (undefinedEquipe1.length > 0) {
+                    console.warn(`   Équipe 1: ${undefinedEquipe1.length} joueur(s) manquant(s)`);
+                }
+                if (undefinedEquipe2.length > 0) {
+                    console.warn(`   Équipe 2: ${undefinedEquipe2.length} joueur(s) manquant(s)`);
+                }
+            }
+            
             matchs.push({
                 terrain: this.premierTerrain + matchIndex,
-                equipe1: [
-                    this.joueurs[paire1[0]],
-                    this.joueurs[paire1[1]]
-                ].filter(j => j), // Filtrer les undefined
-                equipe2: [
-                    this.joueurs[paire2[0]],
-                    this.joueurs[paire2[1]]
-                ].filter(j => j),
+                equipe1: equipe1Raw.filter(j => j), // Filtrer les undefined pour éviter les crashs
+                equipe2: equipe2Raw.filter(j => j),
                 score1: undefined,
                 score2: undefined
             });
