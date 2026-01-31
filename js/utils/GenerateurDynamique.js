@@ -6,7 +6,7 @@
  * 2. Formation des PAIRES (coéquipiers - jamais 2 fois ensemble)
  * 3. Formation des MATCHS (adversaires - max 2-3 fois contre)
  * 
- * @author Assistant IA
+ * @author Mikaël MAUNIER && Assistant IA
  * @version 2.0
  */
 
