@@ -1153,7 +1153,12 @@ class TournoiPage {
         } else if (matchsSansScore.length > 0) {
             // Mode temps/points avec scores manquants
             title = 'Valider le tour ?';
-            message = `Il reste ${matchsSansScore.length} match(s) sans score.\nLes scores manquants seront mis à 0.`;
+            // Le message reflète le comportement réel : scores initiaux (handicaps) ou 0:0 si pas de handicaps
+            const hasHandicaps = this.tournoi?.handicaps || this.tournoi?.prendreEnCompteHandicaps;
+            const scoreInfo = hasHandicaps 
+                ? 'Les scores manquants seront initialisés selon les handicaps (égalité).'
+                : 'Les scores manquants seront mis à 0:0 (égalité).';
+            message = `Il reste ${matchsSansScore.length} match(s) sans score.\n${scoreInfo}`;
             confirmText = 'Valider';
         } else {
             // Mode temps/points, tous les scores saisis
