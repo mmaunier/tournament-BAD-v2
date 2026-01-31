@@ -103,7 +103,7 @@ class GenerateurDynamique {
 
    /**
     * Phase 1: Sélectionner les joueurs qui ne jouent pas ce tour
-    * Critères: équité du nombre de byes + espacement maximal
+    * Critères: équité du nombre de byes + espacement maximal + éviter byes consécutifs
     */
    selectionnerByes(numTour) {
       if (this.byesParTour === 0) {
@@ -116,11 +116,22 @@ class GenerateurDynamique {
          // Score basé sur:
          // 1. Nombre de byes déjà effectués (priorité aux joueurs avec moins de byes)
          // 2. Distance depuis le dernier bye (priorité à ceux qui n'ont pas sorti récemment)
+         // 3. PÉNALITÉ FORTE pour éviter les byes consécutifs
          const distanceDepuisDernierBye = numTour - this.dernierBye[j];
          
-         // Formule: on veut minimiser les byes pour les joueurs qui en ont beaucoup
-         // et maximiser l'espacement
-         const score = this.byeCount[j] * 1000 - distanceDepuisDernierBye;
+         // Score de base : équité du nombre de byes
+         let score = this.byeCount[j] * 1000;
+         
+         // Pénalité très forte pour éviter les byes consécutifs ou trop rapprochés
+         // Ces pénalités sont prioritaires sur l'équité
+         if (distanceDepuisDernierBye === 1) {
+            score += 100000; // Bye au tour précédent = éviter fortement
+         } else if (distanceDepuisDernierBye === 2) {
+            score += 10000;  // Bye il y a 2 tours = éviter si possible
+         }
+         
+         // Bonus pour la distance (favorise ceux qui n'ont pas eu de bye récemment)
+         score -= distanceDepuisDernierBye;
          
          scores.push({ joueur: j, score, byeCount: this.byeCount[j], distance: distanceDepuisDernierBye });
       }
@@ -598,6 +609,7 @@ class GenerateurDynamique {
 
    /**
     * Sélectionne les byes parmi un sous-ensemble de joueurs
+    * Utilise la même logique anti-byes-consécutifs que selectionnerByes
     */
    selectionnerByesPourJoueurs(numTour, joueurs) {
       if (this.byesParTour === 0) {
@@ -607,7 +619,20 @@ class GenerateurDynamique {
       const scores = [];
       for (const j of joueurs) {
          const distanceDepuisDernierBye = numTour - this.dernierBye[j];
-         const score = this.byeCount[j] * 1000 - distanceDepuisDernierBye;
+         
+         // Score de base : équité du nombre de byes
+         let score = this.byeCount[j] * 1000;
+         
+         // Pénalité très forte pour éviter les byes consécutifs ou trop rapprochés
+         if (distanceDepuisDernierBye === 1) {
+            score += 100000; // Bye au tour précédent = éviter fortement
+         } else if (distanceDepuisDernierBye === 2) {
+            score += 10000;  // Bye il y a 2 tours = éviter si possible
+         }
+         
+         // Bonus pour la distance
+         score -= distanceDepuisDernierBye;
+         
          scores.push({ joueur: j, score });
       }
       
