@@ -271,10 +271,10 @@
 }
 
 .score-input {
-    width: 40px;
-    height: 36px;
+    width: 60px;
+    height: 40px;
     text-align: center;
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--radius-md);
