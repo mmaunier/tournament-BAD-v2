@@ -5,6 +5,27 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Versionnement Sémantique](https://semver.org/lang/fr/).
 
+## [2.1.0] - 2026-01-31
+
+### Added
+- **Guide bêta-testeur** : nouveau fichier `BETA_TESTING.md` avec instructions de test complètes
+- **Diagnostic joueurs undefined** : warnings dans la console pour détecter les indices invalides lors de la génération
+
+### Changed
+- **Algorithme de byes amélioré** : pénalités fortes pour éviter les byes consécutifs
+  - Bye au tour précédent : pénalité de 100 000 points
+  - Bye il y a 2 tours : pénalité de 10 000 points
+  - Garantit un espacement optimal entre les repos d'un même joueur
+- **Calcul répartition poules** : utilise maintenant `floor(3 × joueurs / nbTerrains)` pour la poule haute
+  - Exemple : 45 joueurs, 7 terrains → 19 en haute (au lieu de 20), 26 en basse
+  - Utilise le nombre de terrains réel du tournoi (plus de 7 en dur)
+- **Champs de saisie de score agrandis** : largeur 40px → 60px, police plus grande
+
+### Fixed
+- **Message validation tour incohérent** : le message reflète maintenant le comportement réel
+  - Avec handicaps : "initialisés selon les handicaps (égalité)"
+  - Sans handicaps : "mis à 0:0 (égalité)"
+
 ## [2.0.3] - 2026-01-01
 
 ### Added

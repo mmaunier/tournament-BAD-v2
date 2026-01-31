@@ -1,6 +1,11 @@
 # Générateur de Tournois de Badminton en double V2
 
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 Application web moderne pour la gestion complète de tournois de badminton en double (ronde suisse). Conçue pour organiser des tournois de manière efficace et équitable, avec un système de handicap intégré et un affichage vidéoprojecteur.
+
+> 📋 **Bêta-testeurs** : consultez le [Guide de Bêta-Test](BETA_TESTING.md) pour les instructions de test.
 
 ## ✨ Fonctionnalités
 
@@ -49,19 +54,27 @@ Le générateur utilise un algorithme de **Ronde Suisse optimisé** pour créer 
 - **Partenaire unique** : chaque joueur ne joue qu'une seule fois avec le même partenaire
 - **Adversaires limités** : maximum 2-3 confrontations contre le même adversaire
 - **Équilibrage des repos** : minimisation de l'écart entre le nombre de matchs joués par chaque joueur
+- **Jamais de byes consécutifs** : un joueur au repos ne peut pas l'être au tour suivant
+- **Espacement optimal des byes** : les repos d'un même joueur sont espacés au maximum
 - **Rotation équitable** : les joueurs en attente ("sortants") sont priorisés au tour suivant
 
 ### Algorithme
-1. **Analyse de l'historique** : récupération des partenaires et adversaires précédents
-2. **Scoring des combinaisons** : chaque paire possible reçoit un score basé sur les contraintes
-3. **Optimisation gloutonne** : sélection des meilleures paires disponibles
-4. **Fallback dynamique** : si aucune solution parfaite, relaxation progressive des contraintes
+1. **Sélection des byes** : scoring avec pénalités fortes pour éviter les byes consécutifs
+2. **Analyse de l'historique** : récupération des partenaires et adversaires précédents
+3. **Scoring des combinaisons** : chaque paire possible reçoit un score basé sur les contraintes
+4. **Optimisation gloutonne** : sélection des meilleures paires disponibles
+5. **Fallback dynamique** : si aucune solution parfaite, relaxation progressive des contraintes
 
 ### Gestion dynamique
 Lorsqu'un joueur est retiré en cours de tournoi :
 - Les tours futurs sont recalculés avec les mêmes contraintes
 - L'historique des matchs passés est préservé
 - L'équilibrage des repos est ajusté automatiquement
+
+### Répartition en poules (fin de phase)
+- **Poule haute** : `floor(3 × joueurs / nbTerrains)` joueurs (médiane inférieure)
+- **Poule basse** : le reste des joueurs
+- Exemple : 45 joueurs, 7 terrains → 19 en haute, 26 en basse
 
 ## 🏗️ Architecture
 
